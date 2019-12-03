@@ -20,3 +20,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 	path('training/', include('training.urls')),
 ]
+
+from django.views.generic import RedirectView
+urlpatterns += [
+    path('', RedirectView.as_view(url='/training/', permanent=True)),
+]
