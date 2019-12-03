@@ -1,0 +1,28 @@
+{% extends "training/base.html" %}
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+{% load static %}
+{% block content %}
+  <form>
+    <div class="form-group">
+      <label for="exampleInputEmail1">Email address</label>
+      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+      <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+    </div>
+    <div class="form-group">
+      <label for="exampleInputPassword1">Password</label>
+      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+      <small id="passwordHelp" class="form-text text-muted">Use at least one letter, one number and a special sign.</small>
+    </div>
+    <div class="form-group">
+      <label for="exampleTextArea">Role in SERVIR</label>
+      <textarea class="form-control" id="exampleTextArea" placeholder="Describe your role in the project"></textarea>
+      <!--<small id="roleHelp" class="form-text text-muted">Briefly describe what you do in SERVIR.</small>-->
+    </div>
+    <div class="form-group form-check">
+      <input type="checkbox" class="form-check-input" id="exampleCheck1">
+      <label class="form-check-label" for="exampleCheck1">Check me out</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+{% endblock %}

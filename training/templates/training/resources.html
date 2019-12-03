@@ -1,0 +1,26 @@
+{% extends "training/base.html" %}
+{% load static %}
+{% block content %}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<h1>Training Resources</h1>
+<img class="img-fluid" src="{% static 'training/resources.jpg' %}">
+{% if resource_records %}
+<table class="table table-striped table-sm small">
+  <thead class="thead-dark">
+    <th scope="col">Title</th>
+    <th scope="col">Author</th>
+    <th scope="col">Resource<br>Type</th>
+  </thead>
+  {% for rec in resource_records %}
+  <tr>
+      <td><a href="{{ rec.location }}">{{ rec.name }}</a></td>
+    <td>{{ rec.author }}</td>
+    <td>{{ rec.resourcetype_verbose }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p>No Resources have been registered in the database</p>
+{% endif %}
+
+{% endblock %}

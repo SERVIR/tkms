@@ -1,0 +1,13 @@
+{% extends "training/base.html" %}
+
+{% block content %}
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<hr>
+<h2>SERVIR Trainings</h2>
+<hr>
+<p><a href="upcoming">View upcoming events</a></p>
+<p><a href="addtraining">Add training event</a></p>
+
+
+{% endblock %}

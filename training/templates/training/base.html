@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <title>..: SERVIR Training Application :..</title>
+  </head>
+  <body>
+  {% load static %}
+
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">
+        <img src="{% static 'training/SERVIR_Logo.png' %}">   TKMS</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/training/events">Events</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/training/resources">Resources</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/training/organizations">Organizations</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/training/trainers">Trainers</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/training/about">About TKMS</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Admin Tasks
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="/admin/training/training/">Events</a>
+              <a class="dropdown-item" href="/admin/training/resource/">Resources</a>
+              <a class="dropdown-item" href="/admin/training/participantorganization/">Participant Organizations</a>
+              <a class="dropdown-item" href="/admin/training/participant/">Participants</a>
+              <a class="dropdown-item" href="/admin/training/newsreference/">News References</a>
+              <a class="dropdown-item" href="#"></a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/admin/training/keyword/">Keywords</a>
+              <a class="dropdown-item" href="/admin/training/trainer/">Trainers</a>
+              <a class="dropdown-item" href="/admin/training/organization/">Organizations (Hubs)</a>
+            </div>
+          </li>
+          <!--
+          <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li>
+          -->
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </nav>
+
+
+    <div class="container">
+        <div class="jumbotron">
+          <!-- <h2>Training Knowledge Management</h2> -->
+		  <!--<img align="center" src="{% static "training/SERVIR_Logo.jpg" %}">-->
+          {% block content %}
+          {% endblock %}
+        </div>
+    </div>
+<hr>
+  <div>
+    <div class="container-fluid text-center">
+      <div class="row">&nbsp;</div>
+        <div class="row">
+          <div class="col-md-3"><a href="http://servir.cilss.int/en/" target="_blank"><img class="img-fluid" src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/cilss.png"></a></div>
+          <div class="col-md-2"><a href="//servir.rcmrd.org" target="_blank"><img class="img-fluid" src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/rcmrd.png"></a></div>
+          <div class="col-md-2"><a href="//servir.icimod.org" target="_blank"><img class="img-fluid" src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/icimod.png"></a></div>
+          <div class="col-md-2"><a href="//servir.adpc.net/" target="_blank"><img class="img-fluid" src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/adpc.png"></a></div>
+          <div class="col-md-3"><a href="//servir.ciat.cgiar.org/" target="_blank"><img class="img-fluid" src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/CIAT-logo.png"></a></div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-3"><a href="//www.usaid.gov/" target="_blank"><img class="img-fluid" src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/usaid.png"></a></div>
+          <div class="col-md-3"><a href="//www.nasa.gov/" target="_blank"><img class="img-fluid" src="https://servirglobal.net/Portals/_default/Skins/Servir2015/img/nasa.png"></a></div>
+          <div class="col-md-3"></div>
+        </div>
+      <div class="row">&nbsp;</div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="page-footer small bg-dark text-white pt-4">
+
+  <!-- Footer Links -->
+  <div class="container-fluid text-center text-md-left">
+
+    <!-- Grid row -->
+    <div class="row">
+
+      <!-- Grid column -->
+      <hr class="clearfix w-100 d-md-none pb-3">
+
+      <!-- Grid column -->
+      <div class="col-md-3 mb-md-0 mb-3">
+
+        <!-- Links -->
+        <h5 class="text-uppercase">Hubs</h5>
+
+        <ul class="list-unstyled">
+          <li><a href="#">Eastern & Southern Africa</a></li>
+          <li><a href="#">West Africa</a></li>
+          <li><a href="#">Hindu Kush-Himalaya</a></li>
+          <li><a href="#">Lower Mekong</a></li>
+          <li><a href="#">Amazonia</a></li>
+        </ul>
+
+      </div>
+      <!-- Grid column -->
+
+      <!-- Grid column -->
+      <div class="col-md-3 mb-md-0 mb-3">
+
+        <!-- Links -->
+        <h5 class="text-uppercase">Links</h5>
+
+        <ul class="list-unstyled">
+          <li><a href="https://www.servirglobal.net">SERVIRGlobal.net</a></li>
+          <li><a href="https://www.servirglobal.net/about-servir">About SERVIR</a></li>
+          <li><a href="https://www.servirglobal.net/ServiceCatalogue/">Service Catalog</a></li>
+          <li><a href="https://www.servirglobal.net/Privacy-Terms-of-Use">Terms of Use</a></li>
+        </ul>
+
+
+      </div>
+      <!-- Grid column -->
+
+      <!-- Grid column -->
+      <div class="col-md-6 mt-md-0 mt-3">
+        <!-- Content -->
+        <h5 class="text-uppercase">TKMS</h5>
+        <p>Let's build our own capacity to build capacity!</p>
+      </div>
+
+    </div>
+    <!-- Grid row -->
+
+  </div>
+  <!-- Footer Links -->
+
+  <!-- Copyright -->
+  <div class="footer-copyright text-center py-3">Prototype by: SERVIR SCO GIT Team</div>
+  <!-- Copyright -->
+
+</footer>
+<!-- Footer -->
+  </body>
+</html>

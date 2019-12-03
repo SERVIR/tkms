@@ -1,0 +1,6 @@
+{% extends "training/base.html" %}
+<form action="/get_newsreference/" method="post">
+	{% csrf_token %}
+	{{ form }}
+	<input type="submit" value="Submit">
+</form>
