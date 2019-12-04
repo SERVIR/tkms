@@ -8,6 +8,7 @@
 {% if trainer_records %}
 <table class="table table-striped table-sm small">
   <thead class="thead-dark">
+    <th scope="col"></th>
     <th scope="col">Name</th>
     <th scope="col">Organization</th>
     <th scope="col">Role</th>
@@ -15,7 +16,8 @@
   </thead>
   {% for rec in trainer_records %}
   <tr>
-      <td><a href="#">{{ rec.name }}</a></td>
+    <td><a class="badge badge-danger" href="/admin/training/trainer/{{ rec.id }}/change/">Edit</a></td>
+    <td><a href="#">{{ rec.name }}</a></td>
     <td>{{ rec.organization }}</td>
     <td>{{ rec.role }}</td>
     <td>{{ rec.gender_verbose }}</td>

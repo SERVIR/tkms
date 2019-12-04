@@ -26,7 +26,7 @@ class Organization(models.Model):
 	acronym = models.CharField(max_length=50)
 	phone = models.CharField(max_length=20)
 	address = models.CharField(max_length=500)
-	url = models.URLField()
+	url = models.URLField(blank=True, help_text="Organization Site")
 	logo = models.ImageField()
 	email = models.EmailField()
 	cb_lead = models.CharField(max_length=200)
@@ -97,6 +97,7 @@ class Participantorganization(models.Model):
 	name = models.CharField(max_length=200)
 	organizationtype = models.IntegerField(choices=ORGANIZATION_TYPE_CHOICES, default=1, help_text="Organization Type")
 	acronym = models.CharField(max_length=50, blank=True)
+	url = models.URLField(blank=True, help_text="Organization Site")
 	country = models.CharField(max_length=100, help_text="Primary location (HQ)")
 	class Meta:
 		ordering = ('country', 'acronym',)
@@ -167,6 +168,16 @@ class Training(models.Model):
 		(2, "Intermediate"),
 		(3, "Advanced")
 	)
+	LEAD_CHOICES = (
+		(1, "Hub"),
+		(2, "SCO"),
+		(3, "AST"),
+		(4, "SME"),
+		(5, "Support Team"),
+		(6, "Partner"),
+		(7, "Contractor"),
+		(8, "Other")
+	)
 	name = models.CharField(max_length=300)
 	servicearea = models.IntegerField(choices=SERVICE_AREA_CHOICES, default=1, help_text="Service Area")
 	starts = models.DateField()
@@ -178,6 +189,7 @@ class Training(models.Model):
 	# audience = models.CharField(max_length=2500, blank=True)
 	expectedoutcome = models.TextField(blank=True, help_text="Expected Outcome")
 	organization = models.ForeignKey(Organization, on_delete=models.CASCADE, help_text="Host Organization")
+	lead = models.IntegerField(choices=LEAD_CHOICES, default=1, help_text="Type of organization leading the event")
 	format = models.IntegerField(choices=FORMAT_CHOICES, default=1)
 	language = models.CharField(max_length=100, blank=True)
 	attendance = models.IntegerField(choices=ATTENDANCE_CHOICES, default=1)
@@ -214,4 +226,7 @@ class Training(models.Model):
 
 	def attendance_verbose(self):
 		return dict(Training.ATTENDANCE_CHOICES)[self.attendance]
+
+	def lead_verbose(self):
+		return dict(Training.LEAD_CHOICES)[self.lead]
 

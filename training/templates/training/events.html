@@ -22,8 +22,9 @@
 {% if event_records %}
 <table class="table table-striped table-sm small">
   <thead class="thead-dark">
-    <th scope="col">Date</th>
+    <th scope="col"></th>
     <th scope="col">Title</th>
+    <th scope="col">Date</th>
     <th scope="col">Location</th>
     <th scope="col">Organizer</th>
     <th scope="col">Format</th>
@@ -31,8 +32,9 @@
   </thead>
   {% for rec in event_records %}
   <tr>
-      <td><a href="#">{{ rec.starts }}</a></td>
-    <td>{{ rec.name }}</td>
+    <td><a class="badge badge-danger" href="/admin/training/training/{{ rec.id }}/change/">Edit</a></td>
+    <td><a href="#">{{ rec.name }}</a></td>
+    <td>{{ rec.starts }}</td>
     <td>{{ rec.country }}</td>
     <td>{{ rec.organization }}</td>
     <td>{{ rec.format_verbose }}</td>

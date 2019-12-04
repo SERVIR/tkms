@@ -7,13 +7,15 @@
 {% if resource_records %}
 <table class="table table-striped table-sm small">
   <thead class="thead-dark">
+    <th scope="col"></th>
     <th scope="col">Title</th>
     <th scope="col">Author</th>
     <th scope="col">Resource<br>Type</th>
   </thead>
   {% for rec in resource_records %}
   <tr>
-      <td><a href="{{ rec.location }}">{{ rec.name }}</a></td>
+    <td><a class="badge badge-danger" href="/admin/training/resource/{{ rec.id }}/change/">Edit</a></td>
+    <td><a href="{{ rec.location }}">{{ rec.name }}</a></td>
     <td>{{ rec.author }}</td>
     <td>{{ rec.resourcetype_verbose }}</td>
   </tr>
