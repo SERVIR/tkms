@@ -198,6 +198,7 @@ class Training(models.Model):
 	participants = models.ManyToManyField(Participant, blank=True)
 	trainers = models.ManyToManyField(Trainer, blank=True)
 	internalnotes = models.TextField(blank=True, help_text="Notes for internal users (SERVIR network)")
+	sharedorgnotes = models.URLField(blank=True, help_text="Shared documents (e.g., Google Drive Document/Folder, Sharepoint site, etc.)")
 
 	def __str__(self):
 		return self.name + ", " + self.country
