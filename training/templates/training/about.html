@@ -2,9 +2,9 @@
 {% load static %}
 {% block content %}
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-<h1>About the TKM System</h1>
-<img class="img-fluid" src="{% static 'training/about.png' %}">
+<img class="img-fluid rounded" src="{% static 'training/about.png' %}">
 <br>
+<h2 class="border-bottom border-gray pb-2 mb-0">About the TKM System</h2>
 <p class="small">The <a href="https://www.servirglobla.net">SERVIR</a> program focuses on building capacity to use Earth observations for
 adressing development challenges. Between mid-2004 and 2019 the program has delivered more than 323 trainings to more than 5,000
 	professionals. Just in 2019, SERVIR executed 58 trainings.</p>
@@ -13,5 +13,7 @@ adressing development challenges. Between mid-2004 and 2019 the program has deli
 	repository for those materials has prevented wider dissemination and use.</p>
 <p class="small">The Training Knowledge Management System will become an integral part of the SERVIR Capacity Building Framework,
 	supporting the exchange of resources and methods for conducting training activities across the network.</p>
-
+<h3 class="border-bottom border-gray pb-2 mb-0">Access to the System</h3>
+<p class="small">The system will offer public access to training materials and information about training events.</p>
+<p class="small">Designated members of the SERVIR network will have write access to the underlying database.</p>
 {% endblock %}

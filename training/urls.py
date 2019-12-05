@@ -8,6 +8,7 @@ urlpatterns = [
 	# Content Items
 	path("", views.about, name="about"),
 	path("events", views.events, name="events"),
+	path("event/<int:eventid>", views.event_detail, name="event_detail"),
 	path("resources", views.resources, name="resources"),
 	path("organizations", views.organizations, name="organizations"),
 	path("trainers", views.trainers, name="trainers"),

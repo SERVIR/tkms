@@ -1,0 +1,96 @@
+{% extends "training/base.html" %}
+{% load static %}
+{% block content %}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<script type="text/javascript">
+    var events = [
+      {% for rec in event_records %}
+        {% if not forloop.first %},{% endif %}
+        {
+          starts: "{{ rec.starts }}",
+          name: "{{ rec.name }}",
+          country: "{{ rec.country }}",
+          organization: "{{ rec.organization }}",
+          format: "{{ rec.format_verbose }}",
+          servicearea: "{{ rec.servicearea_verbose }}"
+        }
+        {% endfor %}
+    ]
+</script>
+<!-- <img class="img-fluid rounded" src="{% static 'training/events.jpg' %}"> -->
+{% if event_data %}
+    <main role="main" class="container">
+      <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">{{ event_data.name }}</h6>
+        <div class="media text-muted pt-3">
+          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark">{{ event_data.city}}, {{ event_data.country }} - {{ event_data.starts }}</strong>
+            <span class="badge badge-success">{{ event_data.servicearea_verbose }}</span>
+            <br>
+            {{ event_data.description }}
+            <br>
+            {{ event_data.format_verbose }}
+          </p>
+        </div>
+        <div class="media text-muted pt-3">
+          <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
+          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark">Participating Organizations</strong>
+            Organization 1, Organization 2, Organization 3, etc.
+          </p>
+        </div>
+        <div class="media text-muted pt-3">
+          <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
+          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark">Expected Outcome</strong>
+            {{ event_data.expectedoutcome }} This training is expected to ...
+          </p>
+        </div>
+        <small class="d-block text-right mt-3">
+          <a href="#">More Information</a>
+        </small>
+      </div>
+
+      <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">Resources</h6>
+        <div class="media text-muted pt-3">
+          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <div class="d-flex justify-content-between align-items-center w-100">
+              <strong class="text-gray-dark">Resource 1</strong>
+              <a href="#">Download</a>
+            </div>
+            <span class="d-block">Abstract for resource object #1</span>
+          </div>
+        </div>
+        <div class="media text-muted pt-3">
+          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <div class="d-flex justify-content-between align-items-center w-100">
+              <strong class="text-gray-dark">Resource 1</strong>
+              <a href="#">Download</a>
+            </div>
+            <span class="d-block">Abstract for resource object #2</span>
+          </div>
+        </div>
+        <div class="media text-muted pt-3">
+          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <div class="d-flex justify-content-between align-items-center w-100">
+              <strong class="text-gray-dark">Resource 3</strong>
+              <a href="#">Download</a>
+            </div>
+            <span class="d-block">Abstract for resource object #3</span>
+          </div>
+        </div>
+        <small class="d-block text-right mt-3">
+          <a href="/training/events">Return</a>
+        </small>
+      </div>
+    </main>
+
+{% else %}
+<p>Event not found!</p>
+{% endif %}
+
+{% endblock %}

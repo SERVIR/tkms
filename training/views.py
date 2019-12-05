@@ -43,6 +43,13 @@ def events(request):
 			   'info': '',}
 	return render(request, "training/events.html", context=content)
 
+def event_detail(request, eventid):
+	# event_data = Training
+	event_data = Training.objects.get(id=eventid)
+	content = {'event_data': event_data,
+			   'info': '',}
+	return render(request, "training/event_detail.html", context=content)
+
 def resources(request):
 	resource_records = Resource.objects.order_by('resourcetype')
 	content = { 'resource_records': resource_records,

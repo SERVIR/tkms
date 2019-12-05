@@ -18,7 +18,7 @@
         {% endfor %}
     ]
 </script>
-<img class="img-fluid" src="{% static 'training/events.jpg' %}">
+<img class="img-fluid rounded" src="{% static 'training/events.jpg' %}">
 {% if event_records %}
 <table class="table table-striped table-sm small">
   <thead class="thead-dark">
@@ -33,7 +33,7 @@
   {% for rec in event_records %}
   <tr>
     <td><a class="badge badge-danger" href="/admin/training/training/{{ rec.id }}/change/">Edit</a></td>
-    <td><a href="#">{{ rec.name }}</a></td>
+    <td><a href="/training/event/{{ rec.id }}">{{ rec.name }}</a></td>
     <td>{{ rec.starts }}</td>
     <td>{{ rec.country }}</td>
     <td>{{ rec.organization }}</td>
