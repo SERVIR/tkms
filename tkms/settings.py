@@ -25,7 +25,7 @@ SECRET_KEY = 'dv3or@sjhkpq_b#^m0tpetizbdc*e7h%#d_q9l4%p&u+k)_(##'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [tkms.servirglobal.net]
 
 
 # Application definition
