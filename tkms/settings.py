@@ -25,7 +25,7 @@ SECRET_KEY = 'dv3or@sjhkpq_b#^m0tpetizbdc*e7h%#d_q9l4%p&u+k)_(##'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ '.servirglobal.net' ]
+ALLOWED_HOSTS = [ 'localhost', '127.0.0.1', '.servirglobal.net' ]
 
 
 # Application definition
