@@ -28,61 +28,87 @@
             <strong class="d-block text-gray-dark">{{ event_data.city}}, {{ event_data.country }} - {{ event_data.starts }}</strong>
             <span class="badge badge-success">{{ event_data.servicearea_verbose }}</span>
             <br>
-            {{ event_data.description }}
+            {{ event_data.description|linebreaksbr }}
             <br>
             {{ event_data.format_verbose }}
-          </p>
-        </div>
-        <div class="media text-muted pt-3">
-          <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
-          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <strong class="d-block text-gray-dark">Participating Organizations</strong>
-            Organization 1, Organization 2, Organization 3, etc.
           </p>
         </div>
         <div class="media text-muted pt-3">
           <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">Expected Outcome</strong>
-            {{ event_data.expectedoutcome }} This training is expected to ...
+            {{ event_data.expectedoutcome|linebreaksbr }} This training is expected to ...
           </p>
         </div>
-        <small class="d-block text-right mt-3">
-          <a href="#">More Information</a>
-        </small>
-      </div>
 
+      <!-- Begin: PARTICIPATING ORGANIZATIONS Section -->
+      <div class="media text-muted pt-3">
+        <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
+        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+          <strong class="d-block text-gray-dark">Participating Organizations</strong>
+          {% if participantorganizations_data %}
+            {% for rec in participantorganizations_data %}
+            {% if not forloop.first %} | {% endif %}
+                <span class="badge">{{ rec.name }} ({{ rec.acronym }})</span>
+            {% endfor %}
+          {% else %}
+          <p class="information">No info available on Participant Organization</p>
+          {% endif %}
+        </p>
+      </div>
+      <!-- End: PARTICIPATING ORGANIZATIONS Section -->
+
+      <small class="d-block text-right mt-3">
+        <a href="#">More Information</a>
+      </small>
+    </div>
+
+
+      <!-- Begin: RESOURCES Section -->
       <div class="my-3 p-3 bg-white rounded box-shadow">
         <h6 class="border-bottom border-gray pb-2 mb-0">Resources</h6>
-        <div class="media text-muted pt-3">
-          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <div class="d-flex justify-content-between align-items-center w-100">
-              <strong class="text-gray-dark">Resource 1</strong>
-              <a href="#">Download</a>
+        {% if resource_data %}
+        {% for rec in resource_data %}
+          <div class="media text-muted pt-3">
+            <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+              <div class="d-flex justify-content-between align-items-center w-100">
+                <strong class="text-gray-dark">{{ rec.name }}</strong>
+                <a href="{{ rec.location }}" target="_blank">{{ rec.resourcetype_verbose }}</a>
+              </div>
+              <span class="d-block">Author: {{ rec.author }}<br>{{ rec.abstract|linebreaksbr }}</span>
             </div>
-            <span class="d-block">Abstract for resource object #1</span>
+          </div>
+        {% endfor %}
+        {% else %}
+        <p class="information">Materials not uploaded yet!</p>
+        {% endif %}
+      </div>
+      <!-- End: RESOURCES Section -->
+
+
+      <!-- Begin: INTERNAL NOTES Section -->
+      <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">Internal Notes<svg class="bi bi-alert-circle" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M10 17a7 7 0 100-14 7 7 0 000 14zm0 1a8 8 0 100-16 8 8 0 000 16z" clip-rule="evenodd"></path>
+  <path d="M9.002 13a1 1 0 112 0 1 1 0 01-2 0zM9.1 6.995a.905.905 0 111.8 0l-.35 3.507a.553.553 0 01-1.1 0L9.1 6.995z"></path>
+</svg></h6>
+          <div class="media text-muted pt-3">
+            <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+              <div class="d-flex justify-content-between align-items-center w-100">
+                <strong class="text-gray-dark">Accesible to TKMS contributors Only</strong>
+              </div>
+              <span class="d-block">
+                {{ event_data.internalnotes|linebreaksbr }}<br>
+                <a href="{{ event_data.presurveylink }}" target="_blank">Pre-event Survey</a><br>
+                <a href="{{ event_data.postsurveylink }}" target="_blank">Post-event Survey</a>
+              </span>
+            </div>
           </div>
         </div>
-        <div class="media text-muted pt-3">
-          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <div class="d-flex justify-content-between align-items-center w-100">
-              <strong class="text-gray-dark">Resource 1</strong>
-              <a href="#">Download</a>
-            </div>
-            <span class="d-block">Abstract for resource object #2</span>
-          </div>
-        </div>
-        <div class="media text-muted pt-3">
-          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-            <div class="d-flex justify-content-between align-items-center w-100">
-              <strong class="text-gray-dark">Resource 3</strong>
-              <a href="#">Download</a>
-            </div>
-            <span class="d-block">Abstract for resource object #3</span>
-          </div>
-        </div>
+      <!-- End: INTERNAL NOTES Section -->
+
         <small class="d-block text-right mt-3">
           <a href="/training/events">Return</a>
         </small>

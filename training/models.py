@@ -47,11 +47,13 @@ class Resource(models.Model):
 		(6, "Tutorial"),
 		(7, "Video"),
 		(8, "Audio"),
-		(9, "Script"),
+		(9, "Script/Code Repository"),
 		(10, "Dataset"),
 		(11, "External website"),
 		(12, "Photo/Photo gallery"),
-		(13, "Other")
+		(13, "Document Repository"),
+		(14, "Debrief"),
+		(0, "Other")
 	)
 	name = models.CharField(max_length=300)
 	resourcetype = models.IntegerField(choices=RESOURCE_TYPE_CHOICES, default=1, help_text="Resource Type")
@@ -229,4 +231,3 @@ class Training(models.Model):
 
 	def lead_verbose(self):
 		return dict(Training.LEAD_CHOICES)[self.lead]
-

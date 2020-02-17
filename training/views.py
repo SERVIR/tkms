@@ -34,7 +34,7 @@ def get_newsreference(request):
 			return HttpResponseRedirect('/newsreferencecaptured/')
 		# if GET (or any other method), create a blank form
 		else:
-			form = newsreferenceform()			
+			form = newsreferenceform()
 		return render(request, 'get_newsreference.html', {'form': form})
 
 def events(request):
@@ -46,7 +46,12 @@ def events(request):
 def event_detail(request, eventid):
 	# event_data = Training
 	event_data = Training.objects.get(id=eventid)
+	# TO DO: filter resource_records based on internaluse flag
+	resource_data = event_data.resources.all()
+	participantorganizations_data = event_data.participantorganizations.all()
 	content = {'event_data': event_data,
+			   'resource_data': resource_data,
+			   'participantorganizations_data': participantorganizations_data,
 			   'info': '',}
 	return render(request, "training/event_detail.html", context=content)
 
