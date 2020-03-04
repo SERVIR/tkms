@@ -10,6 +10,8 @@ from .models import Participantorganization
 from .models import Participant
 from .models import Trainer
 from .models import Keyword
+from .models import Servicearea
+from .models import Service
 
 admin.site.register(Organization)
 # admin.site.register(Training)
@@ -19,6 +21,7 @@ admin.site.register(Organization)
 # admin.site.register(Participant)
 # admin.site.register(Trainer)
 admin.site.register(Keyword)
+admin.site.register(Servicearea)
 
 admin.site.site_header = "SERVIR Training Knowledge Management System - Administration"
 
@@ -36,6 +39,10 @@ example:
     )
 
 """
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'serviceCatalogID', 'servicearea')
+    list_filter = ('servicearea',)
 
 @admin.register(Participantorganization)
 class ParticipantorganizationAdmin(admin.ModelAdmin):
@@ -74,10 +81,11 @@ class TrainingAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('starts', 'name','servicearea','country','organization')
-    list_filter = ('servicearea', 'organization', 'country')
+    list_display = ('starts', 'name','country','organization')
+    list_filter = ('serviceareas', 'organization', 'country')
     fieldsets = (
-        ("Name and Location", {'fields':('name','servicearea','starts','ends','city','language','country','organization','contact')}),
+        ("Basic Information", {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'organization', 'contact')}),
+        ("Related Services", {'fields':('serviceareas', 'otherservicearea', 'services', 'otherservice')}),
         ("Content", {'fields':('description','expectedoutcome','format','attendance','level','keywords','resources')}),
         ("Evaluation", {'fields':('presurvey','presurveylink','postsurvey','postsurveylink','newsreferences')}),
         ("Attendance", {'fields':('participantorganizations','participants','trainers')}),

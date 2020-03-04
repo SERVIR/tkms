@@ -26,7 +26,12 @@
           <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">{{ event_data.city}}, {{ event_data.country }} - {{ event_data.starts }}</strong>
-            <span class="badge badge-success">{{ event_data.servicearea_verbose }}</span>
+            {% if serviceareas_data %}
+            {% for rec in serviceareas_data %}
+            {% if not forloop.first %} | {% endif %}
+              <span class="badge badge-success">{{ rec.name }}</span>
+            {% endfor %}
+            {% endif %}
             <br>
             {{ event_data.description|linebreaksbr }}
             <br>
@@ -37,7 +42,7 @@
           <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">Expected Outcome</strong>
-            {{ event_data.expectedoutcome|linebreaksbr }} This training is expected to ...
+            {{ event_data.expectedoutcome|linebreaksbr }}
           </p>
         </div>
 

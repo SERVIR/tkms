@@ -48,9 +48,13 @@ def event_detail(request, eventid):
 	event_data = Training.objects.get(id=eventid)
 	# TO DO: filter resource_records based on internaluse flag
 	resource_data = event_data.resources.all()
+	serviceareas_data = event_data.serviceareas.all()
+	services_data = event_data.services.all()
 	participantorganizations_data = event_data.participantorganizations.all()
 	content = {'event_data': event_data,
 			   'resource_data': resource_data,
+			   'serviceareas_data': serviceareas_data,
+			   'services_data': services_data,
 			   'participantorganizations_data': participantorganizations_data,
 			   'info': '',}
 	return render(request, "training/event_detail.html", context=content)

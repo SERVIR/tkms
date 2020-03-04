@@ -130,6 +130,19 @@ class Participant(models.Model):
 	def gender_verbose(self):
 		return dict(Participant.GENDER_CHOICES)[self.gender]
 
+class Servicearea(models.Model):
+	name = models.CharField(max_length=300, help_text="Service Area Name")
+
+	def __str__(self):
+		return self.name
+
+class Service(models.Model):
+	name = models.CharField(max_length=300, help_text="Service Name (According to the Service Catalog)")
+	serviceCatalogID = models.CharField(max_length=40, blank=True, help_text="Service Catalog ID")
+	servicearea = models.ForeignKey(Servicearea, on_delete=models.CASCADE)
+
+	def __str__(self):
+		return self.name
 
 class Trainer(models.Model):
 	GENDER_CHOICES = (
@@ -159,12 +172,12 @@ class Training(models.Model):
 		(1, "By Invitation"),
 		(2, "Open Registration")
 		)
-	SERVICE_AREA_CHOICES = (
-		(1, "Agriculture & Food Security"),
-		(2, "Land Cover Land Use Change & Ecosystems"),
-		(3, "Water & Water Related Disasters"),
-		(4, "Weather & Climate")
-		)
+	# SERVICE_AREA_CHOICES = (
+	# 	(1, "Agriculture & Food Security"),
+	# 	(2, "Land Cover Land Use Change & Ecosystems"),
+	# 	(3, "Water & Water Related Disasters"),
+	# 	(4, "Weather & Climate")
+	# 	)
 	LEVEL_CHOICES = (
 		(1, "Basic"),
 		(2, "Intermediate"),
@@ -181,7 +194,11 @@ class Training(models.Model):
 		(8, "Other")
 	)
 	name = models.CharField(max_length=300)
-	servicearea = models.IntegerField(choices=SERVICE_AREA_CHOICES, default=1, help_text="Service Area")
+	# servicearea = models.IntegerField(choices=SERVICE_AREA_CHOICES, default=1, help_text="Service Area")
+	serviceareas = models.ManyToManyField(Servicearea, blank=True)
+	otherservicearea = models.CharField(max_length=100, blank=True, help_text="Other Service Area (non-officialy recognized)")
+	services = models.ManyToManyField(Service, blank=True)
+	otherservice = models.CharField(max_length=100, blank=True, help_text="Other Service (non-officialy recognized)")
 	starts = models.DateField()
 	ends = models.DateField(blank=True)
 	# application_deadline = models.DateField(blank=True)
@@ -197,7 +214,7 @@ class Training(models.Model):
 	attendance = models.IntegerField(choices=ATTENDANCE_CHOICES, default=1)
 	# qualifications = models.CharField(max_length=2500, blank=True)
 	level = models.IntegerField(choices=LEVEL_CHOICES, default=1, help_text="Experience Level")
-	contact = models.EmailField(blank=True, help_text="Contact email")
+	contact = models.CharField(max_length=200, blank=True, help_text="Contact email(s)")
 	# fees = models.BooleanField()
 	# promoimage = models.URLField(blank=True, name="Promo Image")
 	# promovideo = models.URLField(blank=True, name= "Promo Video")
@@ -217,8 +234,8 @@ class Training(models.Model):
 	def __str__(self):
 		return self.name + ", " + self.country
 
-	def servicearea_verbose(self):
-		return dict(Training.SERVICE_AREA_CHOICES)[self.servicearea]
+	# def servicearea_verbose(self):
+	# 	return dict(Training.SERVICE_AREA_CHOICES)[self.servicearea]
 
 	def format_verbose(self):
 		return dict(Training.FORMAT_CHOICES)[self.format]
