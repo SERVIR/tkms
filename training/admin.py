@@ -51,7 +51,7 @@ class ParticipantorganizationAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('acronym', 'name', 'organizationtype')
+    list_display = ('name', 'acronym', 'organizationtype', 'country')
     list_filter = ('country', 'organizationtype')
 
 @admin.register(Participant)
@@ -61,7 +61,7 @@ class ParticipantAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('organization','role','gender','country')
+    list_display = ('role', 'organization', 'gender','country')
     list_filter = ('country', 'organization')
 
 @admin.register(Trainer)
@@ -82,9 +82,9 @@ class TrainingAdmin(admin.ModelAdmin):
     - filters that will be displayed in sidebar (list_filter)
     """
     list_display = ('starts', 'name','country','organization')
-    list_filter = ('serviceareas', 'organization', 'country')
+    list_filter = ('serviceareas', 'organization', 'country', 'recordstatus')
     fieldsets = (
-        ("Basic Information", {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'organization', 'contact')}),
+        ("Basic Information", {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'organization', 'contact', 'recordstatus')}),
         ("Related Services", {'fields':('serviceareas', 'otherservicearea', 'services', 'otherservice')}),
         ("Content", {'fields':('description','expectedoutcome','format','attendance','level','keywords','resources')}),
         ("Evaluation", {'fields':('presurvey','presurveylink','postsurvey','postsurveylink','newsreferences')}),

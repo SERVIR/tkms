@@ -172,12 +172,6 @@ class Training(models.Model):
 		(1, "By Invitation"),
 		(2, "Open Registration")
 		)
-	# SERVICE_AREA_CHOICES = (
-	# 	(1, "Agriculture & Food Security"),
-	# 	(2, "Land Cover Land Use Change & Ecosystems"),
-	# 	(3, "Water & Water Related Disasters"),
-	# 	(4, "Weather & Climate")
-	# 	)
 	LEVEL_CHOICES = (
 		(1, "Basic"),
 		(2, "Intermediate"),
@@ -193,13 +187,18 @@ class Training(models.Model):
 		(7, "Contractor"),
 		(8, "Other")
 	)
+	STATUS_CHOICES = (
+		(0, "Draft/test"),
+		(1, "Work in Progress"),
+		(2, "Registration Complete"),
+	)
 	name = models.CharField(max_length=300)
 	# servicearea = models.IntegerField(choices=SERVICE_AREA_CHOICES, default=1, help_text="Service Area")
 	serviceareas = models.ManyToManyField(Servicearea, blank=True)
 	otherservicearea = models.CharField(max_length=100, blank=True, help_text="Other Service Area (non-officialy recognized)")
 	services = models.ManyToManyField(Service, blank=True)
 	otherservice = models.CharField(max_length=100, blank=True, help_text="Other Service (non-officialy recognized)")
-	starts = models.DateField()
+	starts = models.DateField(blank=True)
 	ends = models.DateField(blank=True)
 	# application_deadline = models.DateField(blank=True)
 	city = models.CharField(max_length=100)
@@ -230,6 +229,7 @@ class Training(models.Model):
 	trainers = models.ManyToManyField(Trainer, blank=True)
 	internalnotes = models.TextField(blank=True, help_text="Notes for internal users (SERVIR network)")
 	sharedorgnotes = models.URLField(blank=True, help_text="Shared documents (e.g., Google Drive Document/Folder, Sharepoint site, etc.)")
+	recordstatus = models.IntegerField(choices=STATUS_CHOICES, default=0)
 
 	def __str__(self):
 		return self.name + ", " + self.country

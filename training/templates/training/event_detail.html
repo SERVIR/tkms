@@ -54,7 +54,7 @@
           {% if participantorganizations_data %}
             {% for rec in participantorganizations_data %}
             {% if not forloop.first %} | {% endif %}
-                <span class="badge">{{ rec.name }} ({{ rec.acronym }})</span>
+                <span class="badge">{{ rec.name }} {% if rec.acronym != "" %} ({{ rec.acronym }}) {% endif %}</span>
             {% endfor %}
           {% else %}
           <p class="information">No info available on Participant Organization</p>
@@ -78,9 +78,12 @@
             <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
             <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
               <div class="d-flex justify-content-between align-items-center w-100">
+
                 <strong class="text-gray-dark">{{ rec.name }}</strong>
                 <a href="{{ rec.location }}" target="_blank">{{ rec.resourcetype_verbose }}</a>
+
               </div>
+              {% if rec.internaluse %}<div class="badge badge-warning">Internal Use</div>{% endif %}
               <span class="d-block">Author: {{ rec.author }}<br>{{ rec.abstract|linebreaksbr }}</span>
             </div>
           </div>
