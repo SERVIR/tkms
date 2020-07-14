@@ -80,3 +80,12 @@ def trainers(request):
 
 def about(request):
 	return render(request, "training/about.html",context={})
+
+### API for TrainingSerializer
+
+from rest_framework import viewsets
+from .serializers import TrainingSerializer
+
+class TrainingViewSet(viewsets.ModelViewSet):
+	queryset = Training.objects.all().order_by('organization')
+	serializer_class = TrainingSerializer

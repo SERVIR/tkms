@@ -1,5 +1,10 @@
-from django.urls import path
-from training import views
+from django.urls import path, include
+from . import views
+
+# Required for calling the REST API
+from rest_framework import routers
+router = routers.DefaultRouter()
+router.register(r'training',views.TrainingViewSet)
 
 # Define app name space
 app_name = 'training'
@@ -18,8 +23,10 @@ urlpatterns = [
 	path("addtraining", views.addtraining, name="addtraining"),
 	path("get_newsreference", views.get_newsreference, name="get_newsreference"),
 	path("register", views.register, name="register"),
+	# REST API patterns
+	path('api/', include(router.urls)),
+	path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 	# path('<int:pk>/', views.DetailView.as_view(), name="detail"),
 	# path('<int:pk>/calendar/', views.ResultsView.as_view(), name="calendar"),
 	# path('<int:question_id>/addevent/', views.vote, name="addevent"),
 ]
-
