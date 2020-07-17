@@ -90,7 +90,7 @@ class Resource(models.Model):
 	resourcetype = models.IntegerField(choices=RESOURCE_TYPE_CHOICES, default=1, help_text="Resource Type")
 	location = models.URLField(blank=True, help_text="URL for the resource", default="https://")
 	added = models.DateField(default=datetime.now, help_text="Date the resource was added", verbose_name="Date Added")
-	# hub = models.ForeignKey(Hub, on_delete=models.CASCADE)
+	hub = models.ForeignKey(Hub, on_delete=models.CASCADE, default=1)
 	internaluse = models.BooleanField(blank=True, default=False)
 	author = models.CharField(max_length=100, blank=True)
 	abstract = models.TextField(blank=True, help_text="Brief description of the resource")
@@ -137,7 +137,7 @@ class Participantorganization(models.Model):
 	class Meta:
 		ordering = ('country', 'acronym',)
 	def __str__(self):
-		return self.country + ", " + self.acronym
+		return self.country + ", " + self.acronym + " " + self.name
 
 	def organizationtype_verbose(self):
 		return dict(Participantorganization.ORGANIZATION_TYPE_CHOICES)[self.organizationtype]
@@ -240,6 +240,7 @@ class Training(models.Model):
 	# audience = models.CharField(max_length=2500, blank=True)
 	expectedoutcome = models.TextField(blank=True, help_text="Expected Outcome")
 	organization = models.ForeignKey(Organization, on_delete=models.CASCADE, help_text="Host Organization")
+	hub = models.ForeignKey(Hub, on_delete=models.CASCADE, default=1)
 	lead = models.IntegerField(choices=LEAD_CHOICES, default=1, help_text="Type of organization leading the event")
 	format = models.IntegerField(choices=FORMAT_CHOICES, default=1)
 	language = models.CharField(max_length=100, blank=True)
@@ -257,7 +258,8 @@ class Training(models.Model):
 	keywords = models.ManyToManyField(Keyword, blank=True)
 	resources = models.ManyToManyField(Resource, blank=True)
 	newsreferences = models.ManyToManyField(Newsreference, blank=True)
-	participantorganizations = models.ManyToManyField(Participantorganization)
+	participantorganizations = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainees)")
+	trainingorganization = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainers)", related_name="training_orgs")
 	participants = models.ManyToManyField(Participant, blank=True)
 	trainers = models.ManyToManyField(Trainer, blank=True)
 	# trainingorganization = models.ManyToManyRel()

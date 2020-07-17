@@ -83,14 +83,14 @@ class TrainingAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('starts', 'name','country','organization')
-    list_filter = ('serviceareas', 'organization', 'country', 'recordstatus')
+    list_display = ('starts', 'name','country','hub')
+    list_filter = ('serviceareas', 'organization', 'hub', 'recordstatus')
     fieldsets = (
-        ("Basic Information", {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'organization', 'contact', 'recordstatus')}),
+        ("Basic Information", {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'organization', 'hub', 'contact', 'recordstatus')}),
         ("Related Services", {'fields':('serviceareas', 'otherservicearea', 'services', 'otherservice')}),
         ("Content", {'fields':('description','expectedoutcome','format','attendance','level','keywords','resources')}),
         ("Evaluation", {'fields':('presurvey','presurveylink','postsurvey','postsurveylink','newsreferences')}),
-        ("Attendance", {'fields':('participantorganizations','participants','trainers')}),
+        ("Attendance", {'fields':('participantorganizations','participants','trainingorganization', 'trainers')}),
         ("Administration", {'fields':('internalnotes','sharedorgnotes')}),
     )
 
@@ -101,8 +101,8 @@ class ResourceAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('resourcetype', 'author', 'added', 'name')
-    list_filter = ('resourcetype', 'author', 'added')
+    list_display = ('resourcetype', 'author', 'name', 'added', 'hub')
+    list_filter = ('hub', 'resourcetype', 'author', 'added')
 
 @admin.register(Newsreference)
 class NewsreferenceAdmin(admin.ModelAdmin):
