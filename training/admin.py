@@ -12,8 +12,10 @@ from .models import Trainer
 from .models import Keyword
 from .models import Servicearea
 from .models import Service
+from .models import Hub
 
 admin.site.register(Organization)
+admin.site.register(Hub)
 # admin.site.register(Training)
 # admin.site.register(Resource)
 # admin.site.register(Newsreference)
@@ -99,8 +101,8 @@ class ResourceAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('name', 'resourcetype', 'author')
-    list_filter = ('resourcetype', 'author')
+    list_display = ('resourcetype', 'author', 'added', 'name')
+    list_filter = ('resourcetype', 'author', 'added')
 
 @admin.register(Newsreference)
 class NewsreferenceAdmin(admin.ModelAdmin):

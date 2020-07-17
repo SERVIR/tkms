@@ -1,4 +1,5 @@
 import datetime
+from datetime import datetime
 
 from django.db import models
 from django.utils import timezone
@@ -22,11 +23,12 @@ class Organization(models.Model):
 		(5, "Amazonia"),
 		(6, "Central America")
 	)
-	name = models.CharField(max_length=200)
+	hub = models.CharField(max_length=100, help_text="Hub Name", default="")
+	name = models.CharField(max_length=200, help_text="Hub Organization/Consortium Lead", default="")
 	acronym = models.CharField(max_length=50)
 	phone = models.CharField(max_length=20)
 	address = models.CharField(max_length=500)
-	url = models.URLField(blank=True, help_text="Organization Site")
+	url = models.URLField(help_text="Organization Site", default="http://", blank=True)
 	logo = models.ImageField()
 	email = models.EmailField()
 	cb_lead = models.CharField(max_length=200)
@@ -36,6 +38,35 @@ class Organization(models.Model):
 
 	def region_verbose(self):
 		return dict(Organization.REGION_CHOICES)[self.region]
+
+# 2020-07-17: Hub model will replace Organization model in a second step, after the records
+# 			  from Organization have been copied and references have been updated in related models
+
+class Hub(models.Model):
+
+	hub_short_name = models.CharField(max_length=100, help_text='Hub Short Name')
+	hub_region = models.CharField(max_length=100, help_text='Region Name')
+	hub_logo = models.ImageField(help_text="SERVIR Region Logo", blank=True)
+
+	org_name = models.CharField(max_length=200, help_text="Hub Organization or Consortium Lead", default="")
+	org_acronym = models.CharField(max_length=50)
+	org_url = models.URLField(help_text="Organization Site", default="http://", blank=True)
+	org_logo = models.ImageField(help_text="Organization Logo", blank=True)
+	org_address = models.CharField(max_length=500, help_text="Postal Address", blank=True)
+	org_phone = models.CharField(max_length=20, help_text="Phone Number", blank=True)
+
+	# Primary Organization Contact Info
+	primary_contact_email = models.EmailField(help_text="Primary Contact Email", blank=True)
+	primary_contact_name = models.CharField(max_length=200, help_text="Primary Contact Name", blank=True)
+	primary_contact_role = models.CharField(max_length=200, help_text="Primary Contact Role", blank=True)
+
+	# Capacity Building Lead Contact Info
+	cblead_name = models.CharField(max_length=200, help_text="Capacity Building Lead", blank=True)
+	cblead_email = models.EmailField(help_text="Capacity Building email", blank=True)
+
+	def __str__(self):
+		return self.hub_short_name
+
 
 class Resource(models.Model):
 	RESOURCE_TYPE_CHOICES = (
@@ -57,7 +88,9 @@ class Resource(models.Model):
 	)
 	name = models.CharField(max_length=300)
 	resourcetype = models.IntegerField(choices=RESOURCE_TYPE_CHOICES, default=1, help_text="Resource Type")
-	location = models.URLField()
+	location = models.URLField(blank=True, help_text="URL for the resource", default="https://")
+	added = models.DateField(default=datetime.now, help_text="Date the resource was added", verbose_name="Date Added")
+	# hub = models.ForeignKey(Hub, on_delete=models.CASCADE)
 	internaluse = models.BooleanField(blank=True, default=False)
 	author = models.CharField(max_length=100, blank=True)
 	abstract = models.TextField(blank=True, help_text="Brief description of the resource")
@@ -227,6 +260,7 @@ class Training(models.Model):
 	participantorganizations = models.ManyToManyField(Participantorganization)
 	participants = models.ManyToManyField(Participant, blank=True)
 	trainers = models.ManyToManyField(Trainer, blank=True)
+	# trainingorganization = models.ManyToManyRel()
 	internalnotes = models.TextField(blank=True, help_text="Notes for internal users (SERVIR network)")
 	sharedorgnotes = models.URLField(blank=True, help_text="Shared documents (e.g., Google Drive Document/Folder, Sharepoint site, etc.)")
 	recordstatus = models.IntegerField(choices=STATUS_CHOICES, default=0)
