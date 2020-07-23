@@ -13,6 +13,7 @@ from .models import Keyword
 from .models import Servicearea
 from .models import Service
 from .models import Hub
+from .models import DataSource
 
 admin.site.register(Organization)
 admin.site.register(Hub)
@@ -41,6 +42,11 @@ example:
     )
 
 """
+@admin.register(DataSource)
+class DataSourceAdmin(admin.ModelAdmin):
+    list_display = ('name', 'dataType', 'accessType')
+    list_filter = ('accessType','dataType',)
+
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
     list_display = ('name', 'serviceCatalogID', 'servicearea')
@@ -76,6 +82,10 @@ class TrainerAdmin(admin.ModelAdmin):
     list_display = ('name','organization','role','gender')
     list_filter = ('role', 'organization')
 
+# class ResourcesInline(admin.TabularInline):
+#     """Defines format for insertion of resources"""
+#     model=Resource
+
 @admin.register(Training)
 class TrainingAdmin(admin.ModelAdmin):
     """Administration object for Training model
@@ -83,16 +93,17 @@ class TrainingAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('starts', 'name','country','hub')
+    list_display = ('starts', 'name', 'country', 'hub')
     list_filter = ('serviceareas', 'organization', 'hub', 'recordstatus')
     fieldsets = (
         ("Basic Information", {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'organization', 'hub', 'contact', 'recordstatus')}),
         ("Related Services", {'fields':('serviceareas', 'otherservicearea', 'services', 'otherservice')}),
-        ("Content", {'fields':('description','expectedoutcome','format','attendance','level','keywords','resources')}),
+        ("Content", {'fields':('description','expectedoutcome','format','attendance','level','keywords','resources', 'dataSource')}),
         ("Evaluation", {'fields':('presurvey','presurveylink','postsurvey','postsurveylink','newsreferences')}),
         ("Attendance", {'fields':('participantorganizations','participants','trainingorganization', 'trainers')}),
         ("Administration", {'fields':('internalnotes','sharedorgnotes')}),
     )
+    # inlines = [ResourcesInline]
 
 @admin.register(Resource)
 class ResourceAdmin(admin.ModelAdmin):

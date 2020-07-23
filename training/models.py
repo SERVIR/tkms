@@ -14,6 +14,27 @@ class Keyword(models.Model):
 	def __str__(self):
 		return self.keyword
 
+class DataSource(models.Model):
+	DATA_TYPE_CHOICES = (
+		(0, "Other/not specified"),
+		(1, "EO Sensor"),
+		(2, "Model")
+	)
+	ACCESS_TYPE_CHOICES = (
+		(0, "Other/not specified"),
+		(1, "Public/Open Source"),
+		(2, "Commercial"),
+		(3, "Restricted by Originator")
+	)
+	name = models.CharField(max_length=100)
+	dataType = models.IntegerField(choices=DATA_TYPE_CHOICES, blank=True)
+	accessType = models.IntegerField(choices=ACCESS_TYPE_CHOICES, blank=True)
+
+	class Meta:
+		ordering = ('name',)
+	def __str__(self):
+		return self.name
+
 class Organization(models.Model):
 	REGION_CHOICES = (
 		(1, "Eastern & Southern Africa"),
@@ -266,6 +287,7 @@ class Training(models.Model):
 	internalnotes = models.TextField(blank=True, help_text="Notes for internal users (SERVIR network)")
 	sharedorgnotes = models.URLField(blank=True, help_text="Shared documents (e.g., Google Drive Document/Folder, Sharepoint site, etc.)")
 	recordstatus = models.IntegerField(choices=STATUS_CHOICES, default=0)
+	dataSource = models.ManyToManyField(DataSource, help_text="Data sources used in the training", blank=True)
 
 	def __str__(self):
 		return self.name + ", " + self.country
