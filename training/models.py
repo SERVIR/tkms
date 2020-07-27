@@ -119,7 +119,7 @@ class Resource(models.Model):
 	backedup = models.BooleanField(blank=True, default=False, help_text="Indicates whether the resource has been backed up")
 	backuplocation = models.URLField(blank=True, help_text="Indicates the backup location")
 	def __str__(self):
-		return self.name
+		return self.added.strftime("%Y-%m-%d") + ", " + self.author + ", " + self.name
 	def resourcetype_verbose(self):
 		return dict(Resource.RESOURCE_TYPE_CHOICES)[self.resourcetype]
 
@@ -260,8 +260,8 @@ class Training(models.Model):
 	description = models.TextField(blank=True, help_text="Brief description of the training")
 	# audience = models.CharField(max_length=2500, blank=True)
 	expectedoutcome = models.TextField(blank=True, help_text="Expected Outcome")
-	organization = models.ForeignKey(Organization, on_delete=models.CASCADE, help_text="Host Organization")
-	hub = models.ForeignKey(Hub, on_delete=models.CASCADE, default=1)
+	# organization = models.ForeignKey(Organization, on_delete=models.CASCADE, help_text="Host Organization")
+	hub = models.ForeignKey(Hub, on_delete=models.CASCADE, default=1, help_text="Organizer (hub)")
 	lead = models.IntegerField(choices=LEAD_CHOICES, default=1, help_text="Type of organization leading the event")
 	format = models.IntegerField(choices=FORMAT_CHOICES, default=1)
 	language = models.CharField(max_length=100, blank=True)
@@ -283,7 +283,14 @@ class Training(models.Model):
 	trainingorganization = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainers)", related_name="training_orgs")
 	participants = models.ManyToManyField(Participant, blank=True)
 	trainers = models.ManyToManyField(Trainer, blank=True)
-	# trainingorganization = models.ManyToManyRel()
+
+	# Brief statistics of participantorganizations
+	# Attendance Sheet will be saved to MEDIA_ROOT/uploads/yyyy/mm/dd
+	attendanceSheet = models.FileField(help_text="NOT FUNCTIONAL YET. Will be used to upload spreadsheet", blank=True, upload_to='uploads/%Y/%m/%d/')
+	attendanceMales = models.IntegerField(help_text='Number of male participants', blank=True, null=True)
+	attendanceFemales = models.IntegerField(help_text='Number of female participants', blank=True, null=True)
+	attendanceNotSpecified = models.IntegerField(help_text='Number of participants (gender not specified)', blank=True, null=True)
+
 	internalnotes = models.TextField(blank=True, help_text="Notes for internal users (SERVIR network)")
 	sharedorgnotes = models.URLField(blank=True, help_text="Shared documents (e.g., Google Drive Document/Folder, Sharepoint site, etc.)")
 	recordstatus = models.IntegerField(choices=STATUS_CHOICES, default=0)

@@ -94,13 +94,14 @@ class TrainingAdmin(admin.ModelAdmin):
     - filters that will be displayed in sidebar (list_filter)
     """
     list_display = ('starts', 'name', 'country', 'hub')
-    list_filter = ('serviceareas', 'organization', 'hub', 'recordstatus')
+    list_filter = ('serviceareas', 'hub', 'recordstatus', 'country')
     fieldsets = (
-        ("Basic Information", {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'organization', 'hub', 'contact', 'recordstatus')}),
+        ("Basic Information", {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'hub', 'contact', 'recordstatus')}),
         ("Related Services", {'fields':('serviceareas', 'otherservicearea', 'services', 'otherservice')}),
         ("Content", {'fields':('description','expectedoutcome','format','attendance','level','keywords','resources', 'dataSource')}),
         ("Evaluation", {'fields':('presurvey','presurveylink','postsurvey','postsurveylink','newsreferences')}),
-        ("Attendance", {'fields':('participantorganizations','participants','trainingorganization', 'trainers')}),
+        ("Attendance", {'fields':('participantorganizations','participants','trainingorganization', 'trainers','attendanceSheet')}),
+        ("Attendance count (if attendance sheet is not available)", {'fields':('attendanceFemales', 'attendanceMales', 'attendanceNotSpecified')}),
         ("Administration", {'fields':('internalnotes','sharedorgnotes')}),
     )
     # inlines = [ResourcesInline]
