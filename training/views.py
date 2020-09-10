@@ -87,5 +87,5 @@ from rest_framework import viewsets
 from .serializers import TrainingSerializer
 
 class TrainingViewSet(viewsets.ModelViewSet):
-	queryset = Training.objects.all().order_by('organization')
+	queryset = Training.objects.all().order_by('hub')
 	serializer_class = TrainingSerializer
