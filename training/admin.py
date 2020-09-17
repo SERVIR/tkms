@@ -95,14 +95,27 @@ class TrainingAdmin(admin.ModelAdmin):
     """
     list_display = ('starts', 'name', 'country', 'hub')
     list_filter = ('serviceareas', 'hub', 'recordstatus', 'country')
+    filter_horizontal = ('serviceareas', 'services', 'keywords', 'resources', 'dataSource', 'participantorganizations', 'participants', 'trainingorganization', 'trainers')
     fieldsets = (
-        ("Basic Information", {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'hub', 'contact', 'recordstatus')}),
-        ("Related Services", {'fields':('serviceareas', 'otherservicearea', 'services', 'otherservice')}),
-        ("Content", {'fields':('description','expectedoutcome','format','attendance','level','keywords','resources', 'dataSource')}),
-        ("Evaluation", {'fields':('presurvey','presurveylink','postsurvey','postsurveylink','newsreferences')}),
-        ("Attendance", {'fields':('participantorganizations','participants','trainingorganization', 'trainers','attendanceSheet')}),
-        ("Attendance count (if attendance sheet is not available)", {'fields':('attendanceFemales', 'attendanceMales', 'attendanceNotSpecified')}),
-        ("Administration", {'fields':('internalnotes','sharedorgnotes')}),
+        (None, {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'hub', 'contact', 'recordstatus')}),
+        ("Related Services", {
+            'classes': ('collapse',),
+            'fields':('serviceareas', 'otherservicearea', 'services', 'otherservice')}),
+        ("Content", {
+            'classes': ('collapse',),
+            'fields':('description','expectedoutcome','format','attendance','level','keywords','resources', 'dataSource')}),
+        ("Evaluation", {
+            'classes': ('collapse',),
+            'fields':('presurvey','presurveylink','postsurvey','postsurveylink','newsreferences')}),
+        ("Attendance", {
+            'classes': ('collapse',),
+            'fields':('participantorganizations','participants','trainingorganization', 'trainers','attendanceSheet')}),
+        ("Attendance count (if attendance sheet is not available)", {
+            'classes': ('collapse',),
+            'fields':('attendanceFemales', 'attendanceMales', 'attendanceNotSpecified')}),
+        ("Administration", {
+            'classes': ('collapse',),
+            'fields':('internalnotes','sharedorgnotes')}),
     )
     # inlines = [ResourcesInline]
 
@@ -113,8 +126,8 @@ class ResourceAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('resourcetype', 'author', 'name', 'added', 'hub')
-    list_filter = ('hub', 'resourcetype', 'author', 'added')
+    list_display = ('name', 'author', 'added', 'resourcetype', 'hub', 'internaluse')
+    list_filter = ('hub', 'internaluse', 'resourcetype', 'author', 'added')
 
 @admin.register(Newsreference)
 class NewsreferenceAdmin(admin.ModelAdmin):

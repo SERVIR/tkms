@@ -35,6 +35,9 @@ class DataSource(models.Model):
 	def __str__(self):
 		return self.name
 
+#
+# NOTE: Organization will be removed from the final model (replaced by Hub) - once all references to it are removed
+#
 class Organization(models.Model):
 	REGION_CHOICES = (
 		(1, "Eastern & Southern Africa"),
