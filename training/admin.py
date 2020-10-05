@@ -128,6 +128,7 @@ class ResourceAdmin(admin.ModelAdmin):
     """
     list_display = ('name', 'author', 'added', 'resourcetype', 'hub', 'internaluse')
     list_filter = ('hub', 'internaluse', 'resourcetype', 'author', 'added')
+    filter_horizontal = ("trainings",)
 
 @admin.register(Newsreference)
 class NewsreferenceAdmin(admin.ModelAdmin):
@@ -138,3 +139,4 @@ class NewsreferenceAdmin(admin.ModelAdmin):
     """
     list_display = ('datepublished', 'title', 'source', 'url')
     list_filter = ('source', 'datepublished')
+    filter_horizontal = ("trainings",)

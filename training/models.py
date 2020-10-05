@@ -121,6 +121,7 @@ class Resource(models.Model):
 	keywords = models.ManyToManyField(Keyword)
 	backedup = models.BooleanField(blank=True, default=False, help_text="Indicates whether the resource has been backed up")
 	backuplocation = models.URLField(blank=True, help_text="Indicates the backup location")
+	trainings = models.ManyToManyField('Training', help_text="Related Training Events", blank=True)
 	def __str__(self):
 		return self.added.strftime("%Y-%m-%d") + ", " + self.author + ", " + self.name
 	def resourcetype_verbose(self):
@@ -134,6 +135,7 @@ class Newsreference(models.Model):
 	url = models.URLField(help_text="Location of the article")
 	source = models.CharField(max_length=100, help_text="Publisher", null=True)
 	abstract = models.TextField(blank=True)
+	trainings = models.ManyToManyField('Training', help_text="Related Training Events", blank=True)
 	class Meta:
 		ordering = ('source',)
 	def __str__(self):
