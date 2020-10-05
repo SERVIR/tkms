@@ -92,55 +92,6 @@ class Hub(models.Model):
 		return self.hub_short_name
 
 
-class Resource(models.Model):
-	RESOURCE_TYPE_CHOICES = (
-		(1, "Training Agenda"),
-		(2, "Training Notes"),
-		(3, "Document"),
-		(4, "Presentation"),
-		(5, "Exercise guide"),
-		(6, "Tutorial"),
-		(7, "Video"),
-		(8, "Audio"),
-		(9, "Script/Code Repository"),
-		(10, "Dataset"),
-		(11, "External website"),
-		(12, "Photo/Photo gallery"),
-		(13, "Document Repository"),
-		(14, "Debrief"),
-		(0, "Other")
-	)
-	name = models.CharField(max_length=300)
-	resourcetype = models.IntegerField(choices=RESOURCE_TYPE_CHOICES, default=1, help_text="Resource Type")
-	location = models.URLField(blank=True, help_text="URL for the resource", default="https://")
-	added = models.DateField(default=datetime.now, help_text="Date the resource was added", verbose_name="Date Added")
-	hub = models.ForeignKey(Hub, on_delete=models.CASCADE, default=1)
-	internaluse = models.BooleanField(blank=True, default=False)
-	author = models.CharField(max_length=100, blank=True)
-	abstract = models.TextField(blank=True, help_text="Brief description of the resource")
-	keywords = models.ManyToManyField(Keyword)
-	backedup = models.BooleanField(blank=True, default=False, help_text="Indicates whether the resource has been backed up")
-	backuplocation = models.URLField(blank=True, help_text="Indicates the backup location")
-	trainings = models.ManyToManyField('Training', help_text="Related Training Events", blank=True)
-	def __str__(self):
-		return self.added.strftime("%Y-%m-%d") + ", " + self.author + ", " + self.name
-	def resourcetype_verbose(self):
-		return dict(Resource.RESOURCE_TYPE_CHOICES)[self.resourcetype]
-
-
-class Newsreference(models.Model):
-	id = models.AutoField(primary_key=True)
-	title = models.CharField(max_length=255, help_text="Article title")
-	datepublished = models.DateField(help_text="Date Published", null=True)
-	url = models.URLField(help_text="Location of the article")
-	source = models.CharField(max_length=100, help_text="Publisher", null=True)
-	abstract = models.TextField(blank=True)
-	trainings = models.ManyToManyField('Training', help_text="Related Training Events", blank=True)
-	class Meta:
-		ordering = ('source',)
-	def __str__(self):
-		return self.title
-
 class Participantorganization(models.Model):
 	ORGANIZATION_TYPE_CHOICES = (
 		(1, "Academic Institution"),
@@ -282,8 +233,8 @@ class Training(models.Model):
 	postsurvey = models.BooleanField(help_text="Is there a post-training survey?", blank=True)
 	postsurveylink = models.URLField(help_text="Location of post-survey link", blank=True)
 	keywords = models.ManyToManyField(Keyword, blank=True)
-	resources = models.ManyToManyField(Resource, blank=True)
-	newsreferences = models.ManyToManyField(Newsreference, blank=True)
+	resources = models.ManyToManyField('Resource', blank=True)
+	newsreferences = models.ManyToManyField('Newsreference', blank=True)
 	participantorganizations = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainees)")
 	trainingorganization = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainers)", related_name="training_orgs")
 	participants = models.ManyToManyField(Participant, blank=True)
@@ -318,3 +269,51 @@ class Training(models.Model):
 
 	def lead_verbose(self):
 		return dict(Training.LEAD_CHOICES)[self.lead]
+
+class Newsreference(models.Model):
+	id = models.AutoField(primary_key=True)
+	title = models.CharField(max_length=255, help_text="Article title")
+	datepublished = models.DateField(help_text="Date Published", null=True)
+	url = models.URLField(help_text="Location of the article")
+	source = models.CharField(max_length=100, help_text="Publisher", null=True)
+	abstract = models.TextField(blank=True)
+	trainings = models.ManyToManyField(Training, through=Training.newsreferences.through, help_text="Related Training Events", blank=True)
+	class Meta:
+		ordering = ('source',)
+	def __str__(self):
+		return self.title
+
+class Resource(models.Model):
+	RESOURCE_TYPE_CHOICES = (
+		(1, "Training Agenda"),
+		(2, "Training Notes"),
+		(3, "Document"),
+		(4, "Presentation"),
+		(5, "Exercise guide"),
+		(6, "Tutorial"),
+		(7, "Video"),
+		(8, "Audio"),
+		(9, "Script/Code Repository"),
+		(10, "Dataset"),
+		(11, "External website"),
+		(12, "Photo/Photo gallery"),
+		(13, "Document Repository"),
+		(14, "Debrief"),
+		(0, "Other")
+	)
+	name = models.CharField(max_length=300)
+	resourcetype = models.IntegerField(choices=RESOURCE_TYPE_CHOICES, default=1, help_text="Resource Type")
+	location = models.URLField(blank=True, help_text="URL for the resource", default="https://")
+	added = models.DateField(default=datetime.now, help_text="Date the resource was added", verbose_name="Date Added")
+	hub = models.ForeignKey(Hub, on_delete=models.CASCADE, default=1)
+	internaluse = models.BooleanField(blank=True, default=False)
+	author = models.CharField(max_length=100, blank=True)
+	abstract = models.TextField(blank=True, help_text="Brief description of the resource")
+	keywords = models.ManyToManyField(Keyword)
+	backedup = models.BooleanField(blank=True, default=False, help_text="Indicates whether the resource has been backed up")
+	backuplocation = models.URLField(blank=True, help_text="Indicates the backup location")
+	trainings = models.ManyToManyField(Training, through=Training.resources.through, help_text="Related Training Events", blank=True)
+	def __str__(self):
+		return self.added.strftime("%Y-%m-%d") + ", " + self.author + ", " + self.name
+	def resourcetype_verbose(self):
+		return dict(Resource.RESOURCE_TYPE_CHOICES)[self.resourcetype]
