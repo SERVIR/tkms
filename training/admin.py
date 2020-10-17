@@ -7,6 +7,9 @@ from django import http
 from django import shortcuts
 from django.urls import path
 
+import pandas as pd
+import numpy as np
+
 # Register your models here.
 
 from .models import Organization
@@ -68,6 +71,7 @@ class ParticipantorganizationAdmin(admin.ModelAdmin):
     """
     list_display = ('name', 'acronym', 'organizationtype', 'country')
     list_filter = ('country', 'organizationtype')
+    #filter_horizontal = ("trainings",)
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
@@ -78,6 +82,7 @@ class ParticipantAdmin(admin.ModelAdmin):
     """
     list_display = ('role', 'organization', 'gender','country')
     list_filter = ('country', 'organization')
+    #filter_horizontal = ("trainings",)
 
 @admin.register(Trainer)
 class TrainerAdmin(admin.ModelAdmin):
@@ -95,7 +100,7 @@ class TrainerAdmin(admin.ModelAdmin):
 
 class CsvImportForm(forms.Form):
     csv_file = forms.FileField()
-	
+
 @admin.register(Training)
 class TrainingAdmin(admin.ModelAdmin):
     """Administration object for Training model
@@ -129,6 +134,7 @@ class TrainingAdmin(admin.ModelAdmin):
             'fields':('internalnotes','sharedorgnotes')}),
     )
     # inlines = [ResourcesInline]
+    
     def import_csv(self, request):
         """ Imports participants from a csv
 
@@ -144,28 +150,45 @@ class TrainingAdmin(admin.ModelAdmin):
         """
         # TODO: somehow refresh the widget and show changes
         if request.method == 'POST':
-            csv_file = request.FILES['csv_file']
-            csv_file = csv_file.read().decode('utf-8')
-            reader = csv.reader(StringIO(csv_file))
-            next(reader, None)
+            reader = pd.read_csv(request.FILES['csv_file'],sep=',')
             training = Training.objects.get(id=self.object_id)
-            for row in reader:
+
+            columns = ["Organization","Role","Gender","Country","Presurveycompleted","Postsurveycompleted","Usparticipantstate"]
+            print(columns)
+            data = pd.DataFrame(np.array(reader), columns=columns)
+            print(data)
+
+            for index,df  in reader.iterrows():  
+			
+                if (df['Presurveycompleted'] == "TRUE"):
+                	presurveycompleted = True
+                else:
+                	presurveycompleted = False
+
+                if (df['Postsurveycompleted'] == "TRUE"):
+                	postsurveycompleted = True
+                else:
+                	postsurveycompleted = False
+					
+                print(Participantorganization.objects.filter(
+                        name=df['Organization'])[0])
+				
                 participant = Participant.objects.create(
-                    organization=Participantorganization.objects.get(
-                        name=row[0]),
-                    role=row[1],
-                    gender=row[2],
-                    country=row[3],
-                    presurveycompleted=row[4].lower() == 'true',
-                    postsurveycompleted=row[5].lower() == 'true',
-                    usparticipantstate=row[6]
+                    organization=Participantorganization.objects.filter(
+                        name=df['Organization'])[0],
+                    role=df['Role'],
+                    gender=df['Gender'],
+                    country=df['Country'],
+                    presurveycompleted=presurveycompleted,
+                    postsurveycompleted=postsurveycompleted,
+                    usparticipantstate=df['Usparticipantstate']
                 )
                 participantorganization = Participantorganization.objects.create(
-                    name=row[0][0:10],
+                    name=df['Organization'],
 					organizationtype = "11",
-					acronym = row[0],
+					acronym = df['Organization'][0:10],
 					url = "",
-					country = row[3]					
+					country = df['Country']					
                 )
                 training.participants.add(participant)
                 training.participantorganizations.add(participantorganization)
