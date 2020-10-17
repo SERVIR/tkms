@@ -18,6 +18,7 @@ urlpatterns = [
     path("organizations", views.organizations, name="organizations"),
     path("trainers", views.trainers, name="trainers"),
     path("about", views.about, name="about"),
+    path("charts", views.charts, name="charts"),
     # System Management Items
     path("upcoming", views.upcoming, name="upcoming"),
     path("addtraining", views.addtraining, name="addtraining"),

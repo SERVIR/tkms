@@ -38,9 +38,73 @@ def get_newsreference(request):
 		return render(request, 'get_newsreference.html', {'form': form})
 
 def events(request):
-	event_records = Training.objects.order_by('starts')
+	order_by = request.GET.get('order_by', 'starts')
+
+	asc_des = request.GET.get('asc_des', 'false')
+
+	if asc_des == '':
+		asc_des = 'false';
+
+
+	asc_url = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
+	asc_url_starts = ''
+	asc_url_name = ''
+	asc_url_country = ''
+	asc_url_hub = ''
+	asc_url_format = ''
+
+	if order_by == 'starts':
+		if asc_des == 'true':
+			asc_url_starts = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
+		else:
+			asc_url_starts = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
+
+	if order_by == 'name':
+		if asc_des == 'true':
+			asc_url_name = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
+		else:
+			asc_url_name = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
+
+	if order_by == 'country':
+		if asc_des == 'true':
+			asc_url_country = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
+		else:
+			asc_url_country = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
+
+	if order_by == 'hub':
+		if asc_des == 'true':
+			asc_url_hub = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
+		else:
+			asc_url_hub = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
+
+	if order_by == 'format':
+		if asc_des == 'true':
+			asc_url_format = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
+		else:
+			asc_url_format = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
+
+
+
+
+	if asc_des == 'false':
+		order_by = "-"+order_by
+		event_records = Training.objects.order_by(order_by)
+		asc_url = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png";
+		asc_des = 'true'
+	else:		
+		event_records = Training.objects.order_by(order_by)
+		asc_des = 'false'
+		
+
 	content = {'event_records': event_records,
-			   'info': '',}
+			   'info': '',
+			   'asc_url_starts': asc_url_starts, 
+			   'asc_url_name': asc_url_name, 
+			   'asc_url_country': asc_url_country, 
+			   'asc_url_hub': asc_url_hub, 
+			   'asc_url_format': asc_url_format, 
+			   'asc_des': asc_des, 
+			   }
 	return render(request, "training/events.html", context=content)
 
 def event_detail(request, eventid):
@@ -60,9 +124,61 @@ def event_detail(request, eventid):
 	return render(request, "training/event_detail.html", context=content)
 
 def resources(request):
-	resource_records = Resource.objects.order_by('resourcetype')
-	content = { 'resource_records': resource_records,
-		'info':'',}
+	order_by = request.GET.get('order_by', 'name')
+
+	asc_des = request.GET.get('asc_des', 'true')
+
+	if asc_des == '':
+		asc_des = 'false';
+
+
+	asc_url = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
+	asc_url_name = ''
+	asc_url_author = ''
+	asc_url_resourcetype = ''
+
+	if order_by == 'name':
+		if asc_des == 'true':
+			asc_url_name = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
+		else:
+			asc_url_name = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
+
+	if order_by == 'author':
+		if asc_des == 'true':
+			asc_url_author = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
+		else:
+			asc_url_author = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
+
+	if order_by == 'resourcetype':
+		if asc_des == 'true':
+			asc_url_resourcetype = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
+		else:
+			asc_url_resourcetype = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
+
+
+
+
+	if asc_des == 'false':
+		order_by = "-"+order_by
+		resource_records = Resource.objects.order_by(order_by)
+		asc_url = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png";
+		asc_des = 'true'
+	else:		
+		resource_records = Resource.objects.order_by(order_by)
+		asc_des = 'false'
+		
+	for r in resource_records:
+		if Training.objects.filter(resource=r.id).count()>0:
+			r.t = Training.objects.filter(resource=r.id)[0]
+		
+	content = { 
+		'resource_records': resource_records,
+		'info':'', 
+		'asc_url_name': asc_url_name, 
+		'asc_url_author': asc_url_author, 
+		'asc_url_resourcetype': asc_url_resourcetype, 
+		'asc_des': asc_des, 
+		}
 	return render(request, "training/resources.html", context=content)
 
 def organizations(request):
@@ -80,6 +196,9 @@ def trainers(request):
 
 def about(request):
 	return render(request, "training/about.html",context={})
+
+def charts(request):
+	return render(request, "training/charts.html",context={})
 
 ### API for TrainingSerializer
 

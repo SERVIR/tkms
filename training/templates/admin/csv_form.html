@@ -1,0 +1,17 @@
+{% extends 'admin/base.html' %}
+
+{% block content %}
+    <div>
+        <p>Load your csv here, the participants will be created and added to
+        the training. You will not see this change in the form right now, but
+        after finishing the editing and refreshing the change will be shown.</p>
+        <form action="." method="POST" enctype="multipart/form-data">
+            {{ form.as_p }}
+            {% csrf_token %}
+
+                <button type="submit">Upload CSV</button>
+        </form>
+    </div>
+    <br />
+
+{% endblock %}

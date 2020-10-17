@@ -1,0 +1,51 @@
+{% extends "training/base.html" %}
+{% load static %}
+{% block content %}
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<h2 class="border-bottom border-gray pb-2 mb-0">GeoSpatial Charts</h2>
+<p class="small"></p>
+
+
+
+
+<div>
+	<!-- Create an element where the map will take place -->
+	<div id="mapdiv" style="display:inline;"><svg id="map" width="65%" height="400"></svg></div>
+	<!---->
+	<div style="display:inline;vertical-align: top;">
+		<div id="chartdiv" style="display:inline;vertical-align: top;"  width="100%" align="center"></div>
+		<div><br><br><h1 align="center" id="country">World</h1></div>
+	</div>
+</div>
+
+
+	<script src="https://d3js.org/d3.v3.min.js"></script>
+
+
+
+
+
+
+    	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+        <script src="{% static 'training/js/dist/jquery.vmap.js' %}"></script>
+        <script src="{% static 'training/js/dist/maps/jquery.vmap.world.js' %}"></script>
+        <script src="{% static 'training/js/examples/js/jquery.vmap.sampledata.js' %}"></script>
+
+
+        <script>
+        jQuery('#map').vectorMap({
+            map: 'world_en',
+            backgroundcolor: '#ffffff',
+            color: '#ffffff',
+            hoverOpacity: 0.7,
+            selectedColor: '#ffaaaa',
+            enableZoom: false,
+            showTooltip: true,
+            values: sample_data,
+            scaleColors: ['#C8EEFF', '#006491'],
+            normalizeFunction: 'polynomial'
+        });
+        </script>
+
+
+{% endblock %}

@@ -1,4 +1,11 @@
+import csv
+from io import StringIO
+
 from django.contrib import admin
+from django import forms
+from django import http
+from django import shortcuts
+from django.urls import path
 
 # Register your models here.
 
@@ -86,6 +93,9 @@ class TrainerAdmin(admin.ModelAdmin):
 #     """Defines format for insertion of resources"""
 #     model=Resource
 
+class CsvImportForm(forms.Form):
+    csv_file = forms.FileField()
+	
 @admin.register(Training)
 class TrainingAdmin(admin.ModelAdmin):
     """Administration object for Training model
@@ -93,6 +103,7 @@ class TrainingAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
+    object_id = None
     list_display = ('starts', 'name', 'country', 'hub')
     list_filter = ('serviceareas', 'hub', 'recordstatus', 'country')
     filter_horizontal = ('serviceareas', 'services', 'keywords', 'resources', 'dataSource', 'participantorganizations', 'participants', 'trainingorganization', 'trainers')
@@ -118,6 +129,68 @@ class TrainingAdmin(admin.ModelAdmin):
             'fields':('internalnotes','sharedorgnotes')}),
     )
     # inlines = [ResourcesInline]
+    def import_csv(self, request):
+        """ Imports participants from a csv
+
+        Opens a popup, where the user can upload a csv, with this csv
+        creates the participants and adds all to the current Training,
+        then closes the opened popup. 
+
+        Params:
+            request: HttpRequest for this view
+
+        Returns:
+            The http response for closing the popup
+        """
+        # TODO: somehow refresh the widget and show changes
+        if request.method == 'POST':
+            csv_file = request.FILES['csv_file']
+            csv_file = csv_file.read().decode('utf-8')
+            reader = csv.reader(StringIO(csv_file))
+            next(reader, None)
+            training = Training.objects.get(id=self.object_id)
+            for row in reader:
+                participant = Participant.objects.create(
+                    organization=Participantorganization.objects.get(
+                        name=row[0]),
+                    role=row[1],
+                    gender=row[2],
+                    country=row[3],
+                    presurveycompleted=row[4].lower() == 'true',
+                    postsurveycompleted=row[5].lower() == 'true',
+                    usparticipantstate=row[6]
+                )
+                participantorganization = Participantorganization.objects.create(
+                    name=row[0][0:10],
+					organizationtype = "11",
+					acronym = row[0],
+					url = "",
+					country = row[3]					
+                )
+                training.participants.add(participant)
+                training.participantorganizations.add(participantorganization)
+            training.save()
+            return http.HttpResponse(
+                '<script type="text/javascript">window.close()</script>')
+        form = CsvImportForm()
+        payload = {"form": form}
+        return shortcuts.render( request, "admin/csv_form.html", payload)
+
+    def get_urls(self):
+        urls = super().get_urls()
+        my_urls = [
+            path('import-csv/', self.admin_site.admin_view(self.import_csv)),
+        ]
+        return my_urls + urls
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if obj:
+            self.object_id = obj.id
+        form.base_fields['participants'].widget.template_name = (
+            "admin/widgets/related_widget_wrapper_batch.html")
+        return form
+
 
 @admin.register(Resource)
 class ResourceAdmin(admin.ModelAdmin):

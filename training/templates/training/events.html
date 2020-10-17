@@ -13,7 +13,8 @@
           country: "{{ rec.country }}",
           organization: "{{ rec.organization }}",
           format: "{{ rec.format_verbose }}",
-          servicearea: "{{ rec.servicearea_verbose }}"
+          servicearea: "{{ rec.servicearea_verbose }}",
+          training: "{{ rec.training }}"
         }
         {% endfor %}
     ]
@@ -23,11 +24,44 @@
 <table class="table table-striped table-sm small">
   <thead class="thead-dark">
     <th scope="col"></th>
-    <th scope="col">Date</th>
-    <th scope="col">Title</th>
-    <th scope="col">Location</th>
-    <th scope="col">Hub</th>
-    <th scope="col">Format</th>
+
+
+    <th scope="col"> 
+      <a href="?order_by=starts&asc_des={{ asc_des }}">
+      Date&nbsp;
+      <img width="15px" height="15px" src="{{ asc_url_starts }}"></img></a>
+    </th>
+
+
+    <th scope="col"> 
+      <a href="?order_by=name&asc_des={{ asc_des }}">
+      Title&nbsp;
+      <img width="15px" height="15px" src="{{ asc_url_name }}"></img></a>
+    </th>
+
+
+    <th scope="col"> 
+      <a href="?order_by=country&asc_des={{ asc_des }}">
+      Location&nbsp;
+      <img width="15px" height="15px" src="{{ asc_url_country }}"></img></a>
+    </th>
+
+
+    <th scope="col"> 
+      <a href="?order_by=hub&asc_des={{ asc_des }}">
+      Hub&nbsp;
+      <img width="15px" height="15px" src="{{ asc_url_hub }}"></img></a>
+    </th>
+
+
+    <th scope="col"> 
+      <a href="?order_by=format&asc_des={{ asc_des }}">
+      Format&nbsp;
+      <img width="15px" height="15px" src="{{ asc_url_format }}"></img></a>
+    </th>
+
+
+
     <!-- <th scope="col">Service<br>Area</th> -->
   </thead>
   {% for rec in event_records %}
