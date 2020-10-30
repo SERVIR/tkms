@@ -7,4 +7,4 @@ class TrainingSerializer(serializers.HyperlinkedModelSerializer):
        model = Training
        depth = 1
        # To do: Include 'serviceareas', 'services'
-       fields = ('name', 'starts', 'ends', 'country', 'description', 'organization')
+       fields = ('name', 'starts', 'ends', 'country', 'description', 'trainingorganization')
