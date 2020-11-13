@@ -58,7 +58,17 @@ var  svg = c.append("g");
 
 
 
-
+function arrUnique(arr) {
+    var cleaned = [];
+    arr.forEach(function(itm) {
+        var unique = true;
+        cleaned.forEach(function(itm2) {
+            if (_.isEqual(itm, itm2)) unique = false;
+        });
+        if (unique)  cleaned.push(itm);
+    });
+    return cleaned;
+}
 
 
 
@@ -112,6 +122,32 @@ var  svg1 = c.append("g");
 
 
 
+  function genderData (color,value1,value2){
+    var labels = color.domain();
+    return labels.map(function(label){
+      console.log(value1+" "+value2);
+      if(label=="Female") return { label: label, value: value1 }
+      else return { label: label, value: value2 }
+    });
+  }
+
+  function roleData (color,values){
+
+    const countOccurrences = (arr, val) => values.reduce((a, v) => (v === val ? a + 1 : a), 0);
+    console.log(countOccurrences(values,"Lecturer"));
+//var values = [ "chain" , "pen", "label","label1"];
+
+
+    //var labels = color1.domain();
+    return values.map( function(label) {
+      console.log(label+" "+countOccurrences(values,label));
+     var info = { "label": label,
+                  "value": countOccurrences(values,label)
+                 }
+     return info;
+
+});
+  }
 
 
 
@@ -122,9 +158,6 @@ var  svg1 = c.append("g");
       return { label: label, value: Math.random() }
     });
   }
-
-  change(randomData(color),svg,color);
-  change(randomData(color1),svg1,color1);
 
 
   function change(data, svg, color) {
@@ -426,8 +459,54 @@ var JQVMap = function (params) {
 
     code = code.toLowerCase();
       document.getElementById("country").innerHTML = mapData.paths[code].name;
-      change(randomData(color),svg,color);
-      change(randomData(color1),svg1,color1);
+
+
+
+
+
+
+        var request = new XMLHttpRequest();
+        request.open('GET', 'http://127.0.0.1:8000/training/api/training', true);
+        request.onload = function () {
+
+          var data = JSON.parse(this.response);
+          //console.log(data);
+          if (request.status >= 200 && request.status < 400) {
+            data.forEach(country => {
+              //console.log(country.country + " " + country.attendanceFemales + " & " + country.attendanceMales);
+              if(country.attendanceFemales!=null && country.attendanceMales!=null && (country.country == mapData.paths[code].name)) {
+                console.log("> "+country.country + " " + country.attendanceFemales + " & " + country.attendanceMales);
+                console.log(country.participants);
+                change(genderData(color,country.attendanceFemales,country.attendanceMales),svg,color);
+                var aux = roleData(color1,country.participants);
+                console.log(arrUnique(aux));
+
+                change(arrUnique(aux),svg1,color1);
+                //change(roleData(color,country.attendanceFemales,country.attendanceMales),svg,color);
+              }
+            });
+          } else {
+            console.log("Error");
+          }
+        }
+
+        request.send();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      //change(randomData(color),svg,color);
+      //change(randomData(color1),svg1,color1);
     jQuery(params.container).trigger(mapClickEvent, [code, mapData.paths[code].name]);
 
     if ( !params.multiSelectRegion && !mapClickEvent.isDefaultPrevented()) {
