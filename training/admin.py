@@ -159,36 +159,29 @@ class TrainingAdmin(admin.ModelAdmin):
             print(data)
 
             for index,df  in reader.iterrows():  
-			
-                if (df['Presurveycompleted'] == "TRUE"):
-                	presurveycompleted = True
-                else:
-                	presurveycompleted = False
 
-                if (df['Postsurveycompleted'] == "TRUE"):
-                	postsurveycompleted = True
-                else:
-                	postsurveycompleted = False
-					
+                presurveycompleted = True if df['Presurveycompleted'] == "TRUE" else False
+                postsurveycompleted = True if df['Postsurveycompleted'] == "TRUE" else False
+
                 print(Participantorganization.objects.filter(
                         name=df['Organization'])[0])
-				
-                participant = Participant.objects.create(
+
+                participant, created = Participant.objects.get_or_create(
                     organization=Participantorganization.objects.filter(
                         name=df['Organization'])[0],
-                    role=df['Role'],
-                    gender=df['Gender'],
-                    country=df['Country'],
-                    presurveycompleted=presurveycompleted,
-                    postsurveycompleted=postsurveycompleted,
-                    usparticipantstate=df['Usparticipantstate']
+                        role=df['Role'],
+                        gender=df['Gender'],
+                        country=df['Country'],
+                        presurveycompleted=presurveycompleted,
+                        postsurveycompleted=postsurveycompleted,
+                        usparticipantstate=df['Usparticipantstate']
                 )
-                participantorganization = Participantorganization.objects.create(
+                participantorganization, created = Participantorganization.objects.get_or_create(
                     name=df['Organization'],
-					organizationtype = "11",
-					acronym = df['Organization'][0:10],
-					url = "",
-					country = df['Country']					
+                    organizationtype = "11",
+                    acronym = df['Organization'][0:10],
+                    url = "",
+                    country = df['Country']
                 )
                 training.participants.add(participant)
                 training.participantorganizations.add(participantorganization)
