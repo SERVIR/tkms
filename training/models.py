@@ -113,6 +113,7 @@ class Participantorganization(models.Model):
 	country = models.CharField(max_length=100, help_text="Primary location (HQ)")
 	class Meta:
 		ordering = ('country', 'acronym',)
+		unique_together = ['name', 'country',]
 	def __str__(self):
 		return self.country + ", " + self.acronym + " " + self.name
 
