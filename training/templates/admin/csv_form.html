@@ -1,5 +1,8 @@
 {% extends 'admin/base.html' %}
 
+{% block breadcrumbs %}
+{% endblock %}
+
 {% block content %}
     <div>
         <p>Load your csv here, the participants will be created and added to
@@ -8,10 +11,8 @@
         <form action="." method="POST" enctype="multipart/form-data">
             {{ form.as_p }}
             {% csrf_token %}
-
-                <button type="submit">Upload CSV</button>
+            <button type="submit">Upload CSV</button>
         </form>
     </div>
     <br />
-
 {% endblock %}

@@ -134,7 +134,12 @@ class TrainingAdmin(admin.ModelAdmin):
             'fields':('internalnotes','sharedorgnotes')}),
     )
     # inlines = [ResourcesInline]
-    
+
+    change_form_template = "admin/forms/training-admin-form.html"
+
+    def response_change(self, request, obj):
+        return super().response_change(request, obj)
+
     def import_csv(self, request):
         """ Imports participants from a csv
 
@@ -187,7 +192,7 @@ class TrainingAdmin(admin.ModelAdmin):
                 training.participantorganizations.add(participantorganization)
             training.save()
             return http.HttpResponse(
-                '<script type="text/javascript">window.close()</script>')
+                '<script type="text/javascript">window.opener.location.reload();window.close();</script>')
         form = CsvImportForm()
         payload = {"form": form}
         return shortcuts.render( request, "admin/csv_form.html", payload)
@@ -203,8 +208,6 @@ class TrainingAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         if obj:
             self.object_id = obj.id
-        form.base_fields['participants'].widget.template_name = (
-            "admin/widgets/related_widget_wrapper_batch.html")
         return form
 
 
