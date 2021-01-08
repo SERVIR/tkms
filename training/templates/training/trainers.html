@@ -9,9 +9,24 @@
 <table class="table table-striped table-sm small">
   <thead class="thead-dark">
     <th scope="col"></th>
-    <th scope="col">Name</th>
-    <th scope="col">Organization</th>
-    <th scope="col">Role</th>
+    <th scope="col">
+      <a href="?order_by=name&asc_des={{ asc_des }}">
+        Name&nbsp;
+        <img width="15px" height="15px" src="{{ asc_url_name }}" />
+      </a>
+    </th>
+    <th scope="col">
+      <a href="?order_by=organization&asc_des={{ asc_des }}">
+        Organization&nbsp;
+        <img width="15px" height="15px" src="{{ asc_url_organization }}" />
+      </a>
+    </th>
+    <th scope="col">
+      <a href="?order_by=role&asc_des={{ asc_des }}">
+        Role&nbsp;
+        <img width="15px" height="15px" src="{{ asc_url_role }}" />
+      </a>
+    </th>
   </thead>
   {% for rec in trainer_records %}
   <tr>

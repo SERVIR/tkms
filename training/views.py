@@ -168,9 +168,34 @@ def organizations(request):
 	return render(request, "training/organizations.html", context=content)
 
 def trainers(request):
-	trainer_records = Trainer.objects.order_by('name')
-	content = {'trainer_records': trainer_records,
-			   'info': '',}
+	order_by = request.GET.get('order_by', 'name')
+	asc_des = request.GET.get('asc_des', 'true')
+
+	if asc_des == '':
+		asc_des = 'false'
+
+	asc_image = 'training/generic-sorting-2.png' if asc_des == 'true' else 'training/generic-sorting.png'
+	asc_url = staticfiles_storage.url(asc_image)
+	asc_url_name = asc_url if order_by == 'name' else ''
+	asc_url_organization = asc_url if order_by == 'organization' else ''
+	asc_url_role = asc_url if order_by == 'role' else ''
+
+	if asc_des == 'false':
+		order_by = "-" + order_by
+		trainer_records = Trainer.objects.order_by(order_by)
+		asc_des = 'true'
+	else:
+		trainer_records = Trainer.objects.order_by(order_by)
+		asc_des = 'false'
+
+	content = {
+		'trainer_records': trainer_records,
+		'info': '',
+		'asc_url_name': asc_url_name,
+		'asc_url_organization': asc_url_organization,
+		'asc_url_role': asc_url_role,
+		'asc_des': asc_des,
+	}
 	return render(request, "training/trainers.html", context=content)
 
 def about(request):
