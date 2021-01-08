@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.staticfiles.storage import staticfiles_storage
 from training.models import Keyword, Organization, Resource, Newsreference, Participantorganization, Participant, Trainer, Training
 
 from .forms import get_newsreference
@@ -125,60 +126,38 @@ def event_detail(request, eventid):
 
 def resources(request):
 	order_by = request.GET.get('order_by', 'name')
-
 	asc_des = request.GET.get('asc_des', 'true')
 
 	if asc_des == '':
-		asc_des = 'false';
+		asc_des = 'false'
 
-
-	asc_url = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
-	asc_url_name = ''
-	asc_url_author = ''
-	asc_url_resourcetype = ''
-
-	if order_by == 'name':
-		if asc_des == 'true':
-			asc_url_name = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
-		else:
-			asc_url_name = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
-
-	if order_by == 'author':
-		if asc_des == 'true':
-			asc_url_author = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
-		else:
-			asc_url_author = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
-
-	if order_by == 'resourcetype':
-		if asc_des == 'true':
-			asc_url_resourcetype = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
-		else:
-			asc_url_resourcetype = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
-
-
-
+	asc_image = 'training/generic-sorting-2.png' if asc_des == 'true' else 'training/generic-sorting.png'
+	asc_url = staticfiles_storage.url(asc_image)
+	asc_url_name = asc_url if order_by == 'name' else ''
+	asc_url_author = asc_url if order_by == 'author' else ''
+	asc_url_resourcetype = asc_url if order_by == 'resourcetype' else ''
 
 	if asc_des == 'false':
-		order_by = "-"+order_by
+		order_by = "-" + order_by
 		resource_records = Resource.objects.order_by(order_by)
-		asc_url = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png";
 		asc_des = 'true'
-	else:		
+	else:
 		resource_records = Resource.objects.order_by(order_by)
 		asc_des = 'false'
-		
+
 	for r in resource_records:
-		if Training.objects.filter(resource=r.id).count()>0:
+		if Training.objects.filter(resource=r.id).count() > 0:
 			r.t = Training.objects.filter(resource=r.id)[0]
 		
-	content = { 
+	content = {
 		'resource_records': resource_records,
-		'info':'', 
-		'asc_url_name': asc_url_name, 
-		'asc_url_author': asc_url_author, 
-		'asc_url_resourcetype': asc_url_resourcetype, 
-		'asc_des': asc_des, 
-		}
+		'info': '',
+		'asc_url_name': asc_url_name,
+		'asc_url_author': asc_url_author,
+		'asc_url_resourcetype': asc_url_resourcetype,
+		'asc_des': asc_des,
+	}
+
 	return render(request, "training/resources.html", context=content)
 
 def organizations(request):
