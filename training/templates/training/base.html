@@ -75,40 +75,21 @@
           <li class="nav-item">
             <a class="nav-link" href="/training/charts">Charts</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/training/about">About TKMS</a>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Admin Tasks
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="/admin/training/training/">Events</a>
-              <a class="dropdown-item" href="/admin/training/resource/">Resources</a>
-              <a class="dropdown-item" href="/admin/training/participantorganization/">Participant Organizations</a>
-              <a class="dropdown-item" href="/admin/training/participant/">Participants</a>
-              <a class="dropdown-item" href="/admin/training/newsreference/">News References</a>
-              <a class="dropdown-item" href="#"></a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="/admin/training/servicearea/">Service Areas</a>
-              <a class="dropdown-item" href="/admin/training/service/">Services</a>
-              <a class="dropdown-item" href="/admin/training/keyword/">Keywords</a>
-              <a class="dropdown-item" href="/admin/training/trainer/">Trainers</a>
-              <a class="dropdown-item" href="/admin/training/datasource/">Data Sources</a>
-              <a class="dropdown-item" href="/admin/training/hub/">Hubs</a>
-
-            </div>
-          </li>
-          <!--
-          <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
-          </li>
-          -->
+          {% if user.is_authenticated %}
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ user.get_username }}
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="/accounts/logout/">Logout</a>
+              </div>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link" href="/accounts/login">Login</a>
+            </li>
+          {% endif %}
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-primary my-2 my-sm-0" type="submit">Search</button>
-        </form>
       </div>
     </nav>
 

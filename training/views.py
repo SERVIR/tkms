@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.staticfiles.storage import staticfiles_storage
 from training.models import Keyword, Organization, Resource, Newsreference, Participantorganization, Participant, Trainer, Training
+from django.contrib.auth.decorators import login_required
 
 from .forms import get_newsreference
 
@@ -38,6 +39,7 @@ def get_newsreference(request):
 			form = newsreferenceform()
 		return render(request, 'get_newsreference.html', {'form': form})
 
+@login_required
 def events(request):
 	order_by = request.GET.get('order_by', 'starts')
 
@@ -108,6 +110,7 @@ def events(request):
 			   }
 	return render(request, "training/events.html", context=content)
 
+@login_required
 def event_detail(request, eventid):
 	# event_data = Training
 	event_data = Training.objects.get(id=eventid)
@@ -124,6 +127,7 @@ def event_detail(request, eventid):
 			   'info': '',}
 	return render(request, "training/event_detail.html", context=content)
 
+@login_required
 def resources(request):
 	order_by = request.GET.get('order_by', 'name')
 	asc_des = request.GET.get('asc_des', 'true')
@@ -160,6 +164,7 @@ def resources(request):
 
 	return render(request, "training/resources.html", context=content)
 
+@login_required
 def organizations(request):
 	# Participant Organizations, rather than organizers
 	organization_records = Participantorganization.objects.order_by('country')
@@ -167,6 +172,7 @@ def organizations(request):
 			   'info': '',}
 	return render(request, "training/organizations.html", context=content)
 
+@login_required
 def trainers(request):
 	order_by = request.GET.get('order_by', 'name')
 	asc_des = request.GET.get('asc_des', 'true')

@@ -18,7 +18,8 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-	path('training/', include('training.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('training/', include('training.urls')),
 ]
 
 from django.views.generic import RedirectView
