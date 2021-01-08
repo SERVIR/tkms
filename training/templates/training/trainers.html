@@ -12,7 +12,6 @@
     <th scope="col">Name</th>
     <th scope="col">Organization</th>
     <th scope="col">Role</th>
-    <th scope="col">Gender</th>
   </thead>
   {% for rec in trainer_records %}
   <tr>
@@ -20,7 +19,6 @@
     <td><a href="#">{{ rec.name }}</a></td>
     <td>{{ rec.organization }}</td>
     <td>{{ rec.role }}</td>
-    <td>{{ rec.gender_verbose }}</td>
   </tr>
   {% endfor %}
 </table>
