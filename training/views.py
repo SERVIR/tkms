@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.staticfiles.storage import staticfiles_storage
 from training.models import Keyword, Organization, Resource, Newsreference, Participantorganization, Participant, Trainer, Training
 from django.contrib.auth.decorators import login_required
 
@@ -135,19 +134,8 @@ def resources(request):
 	if asc_des == '':
 		asc_des = 'false'
 
-	asc_image = 'training/generic-sorting-2.png' if asc_des == 'true' else 'training/generic-sorting.png'
-	asc_url = staticfiles_storage.url(asc_image)
-	asc_url_name = asc_url if order_by == 'name' else ''
-	asc_url_author = asc_url if order_by == 'author' else ''
-	asc_url_resourcetype = asc_url if order_by == 'resourcetype' else ''
-
-	if asc_des == 'false':
-		order_by = "-" + order_by
-		resource_records = Resource.objects.order_by(order_by)
-		asc_des = 'true'
-	else:
-		resource_records = Resource.objects.order_by(order_by)
-		asc_des = 'false'
+	resource_records = Resource.objects.order_by(order_by if asc_des == 'true' else "-" + order_by)
+	asc_des = 'true' if asc_des == 'false' else 'false'
 
 	for r in resource_records:
 		if Training.objects.filter(resource=r.id).count() > 0:
@@ -156,9 +144,7 @@ def resources(request):
 	content = {
 		'resource_records': resource_records,
 		'info': '',
-		'asc_url_name': asc_url_name,
-		'asc_url_author': asc_url_author,
-		'asc_url_resourcetype': asc_url_resourcetype,
+		'order_by': order_by,
 		'asc_des': asc_des,
 	}
 
@@ -180,26 +166,13 @@ def trainers(request):
 	if asc_des == '':
 		asc_des = 'false'
 
-	asc_image = 'training/generic-sorting-2.png' if asc_des == 'true' else 'training/generic-sorting.png'
-	asc_url = staticfiles_storage.url(asc_image)
-	asc_url_name = asc_url if order_by == 'name' else ''
-	asc_url_organization = asc_url if order_by == 'organization' else ''
-	asc_url_role = asc_url if order_by == 'role' else ''
-
-	if asc_des == 'false':
-		order_by = "-" + order_by
-		trainer_records = Trainer.objects.order_by(order_by)
-		asc_des = 'true'
-	else:
-		trainer_records = Trainer.objects.order_by(order_by)
-		asc_des = 'false'
+	trainer_records = Trainer.objects.order_by(order_by if asc_des == 'true' else "-" + order_by)
+	asc_des = 'true' if asc_des == 'false' else 'false'
 
 	content = {
 		'trainer_records': trainer_records,
 		'info': '',
-		'asc_url_name': asc_url_name,
-		'asc_url_organization': asc_url_organization,
-		'asc_url_role': asc_url_role,
+		'order_by': order_by,
 		'asc_des': asc_des,
 	}
 	return render(request, "training/trainers.html", context=content)

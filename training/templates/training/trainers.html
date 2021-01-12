@@ -11,20 +11,38 @@
     <th scope="col"></th>
     <th scope="col">
       <a href="?order_by=name&asc_des={{ asc_des }}">
-        Name&nbsp;
-        <img width="15px" height="15px" src="{{ asc_url_name }}" />
+        Name
+        {% if order_by == 'name' %}
+          {% if asc_des == 'true' %}
+            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
+          {% else %}
+            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
+          {% endif %}
+        {% endif %}
       </a>
     </th>
     <th scope="col">
       <a href="?order_by=organization&asc_des={{ asc_des }}">
-        Organization&nbsp;
-        <img width="15px" height="15px" src="{{ asc_url_organization }}" />
+        Organization
+        {% if order_by == 'organization' %}
+          {% if asc_des == 'true' %}
+            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
+          {% else %}
+            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
+          {% endif %}
+        {% endif %}
       </a>
     </th>
     <th scope="col">
       <a href="?order_by=role&asc_des={{ asc_des }}">
-        Role&nbsp;
-        <img width="15px" height="15px" src="{{ asc_url_role }}" />
+        Role
+        {% if order_by == 'role' %}
+          {% if asc_des == 'true' %}
+            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
+          {% else %}
+            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
+          {% endif %}
+        {% endif %}
       </a>
     </th>
   </thead>
