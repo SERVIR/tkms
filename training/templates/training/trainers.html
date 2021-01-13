@@ -2,6 +2,7 @@
 {% load static %}
 {% block content %}
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
 <h1>Trainers</h1>
 <img class="img-fluid rounded" src="{% static 'training/trainers.jpg' %}">
 
@@ -56,7 +57,7 @@
   {% endfor %}
 </table>
 {% else %}
-<p>No trainers have been registered in the database</p>
+  <p>No Trainers have been registered in the database</p>
 {% endif %}
 
 {% endblock %}

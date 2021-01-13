@@ -41,72 +41,21 @@ def get_newsreference(request):
 @login_required
 def events(request):
 	order_by = request.GET.get('order_by', 'starts')
-
 	asc_des = request.GET.get('asc_des', 'false')
 
 	if asc_des == '':
-		asc_des = 'false';
-
-
-	asc_url = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
-	asc_url_starts = ''
-	asc_url_name = ''
-	asc_url_country = ''
-	asc_url_hub = ''
-	asc_url_format = ''
-
-	if order_by == 'starts':
-		if asc_des == 'true':
-			asc_url_starts = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
-		else:
-			asc_url_starts = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
-
-	if order_by == 'name':
-		if asc_des == 'true':
-			asc_url_name = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
-		else:
-			asc_url_name = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
-
-	if order_by == 'country':
-		if asc_des == 'true':
-			asc_url_country = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
-		else:
-			asc_url_country = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
-
-	if order_by == 'hub':
-		if asc_des == 'true':
-			asc_url_hub = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
-		else:
-			asc_url_hub = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
-
-	if order_by == 'format':
-		if asc_des == 'true':
-			asc_url_format = "https://img.icons8.com/ultraviolet/2x/generic-sorting-2.png"
-		else:
-			asc_url_format = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png"
-
-
-
-
-	if asc_des == 'false':
-		order_by = "-"+order_by
-		event_records = Training.objects.order_by(order_by)
-		asc_url = "https://img.icons8.com/ultraviolet/2x/generic-sorting.png";
-		asc_des = 'true'
-	else:		
-		event_records = Training.objects.order_by(order_by)
 		asc_des = 'false'
-		
 
-	content = {'event_records': event_records,
-			   'info': '',
-			   'asc_url_starts': asc_url_starts, 
-			   'asc_url_name': asc_url_name, 
-			   'asc_url_country': asc_url_country, 
-			   'asc_url_hub': asc_url_hub, 
-			   'asc_url_format': asc_url_format, 
-			   'asc_des': asc_des, 
-			   }
+	event_records = Training.objects.order_by(order_by if asc_des == 'true' else "-" + order_by)
+	asc_des = 'true' if asc_des == 'false' else 'false'
+
+	content = {
+		'event_records': event_records,
+		'info': '',
+		'order_by': order_by,
+		'asc_des': asc_des, 
+	}
+
 	return render(request, "training/events.html", context=content)
 
 @login_required
@@ -152,10 +101,22 @@ def resources(request):
 
 @login_required
 def organizations(request):
-	# Participant Organizations, rather than organizers
-	organization_records = Participantorganization.objects.order_by('country')
-	content = {'organization_records': organization_records,
-			   'info': '',}
+	order_by = request.GET.get('order_by', 'country')
+	asc_des = request.GET.get('asc_des', 'false')
+
+	if asc_des == '':
+		asc_des = 'false'
+
+	organization_records = Participantorganization.objects.order_by(order_by if asc_des == 'true' else "-" + order_by)
+	asc_des = 'true' if asc_des == 'false' else 'false'
+
+	content = {
+		'organization_records': organization_records,
+		'info': '',
+		'order_by': order_by,
+		'asc_des': asc_des,
+	}
+
 	return render(request, "training/organizations.html", context=content)
 
 @login_required
