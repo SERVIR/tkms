@@ -2,39 +2,115 @@
 {% load static %}
 {% block content %}
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
 <h2 class="border-bottom border-gray pb-2 mb-0">GeoSpatial Charts</h2>
 <p class="small"></p>
 
-
-
-
-<div>
-	<!-- Create an element where the map will take place -->
-	<div id="mapdiv" style="display:inline;"><svg id="map" width="65%" height="400"></svg></div>
-	<!---->
-	<div style="display:inline;vertical-align: top;">
-		<div id="chartdiv" style="display:inline;vertical-align: top;"  width="100%" align="center"></div>
-		<div><br><br><h1 align="center" id="country">World</h1></div>
-	</div>
+<div id="mapdiv" style="display: inline;">
+    <svg id="map" width="100%" height="400"></svg>
+</div>
+<div style="text-align: center; margin-top: 1rem;">
+    <div id="charts" class="row">
+        <div id="chart1" class="col-6">
+            <h5>Training by Country</h5>
+            <canvas id="pie-chart-area"></canvas>
+            <div class="row mt-3">
+                <div id="gender-female" class="col-6">0</div>
+                <div id="gender-male" class="col-6">0</div>
+            </div>
+        </div>
+        <div id="chart2" class="col-6">
+            <h5>Participant by Gender</h5>
+            <h6 id="selected-country"></h6>
+            <canvas id="donut-chart-area"></canvas>
+        </div>
+    </div>
 </div>
 
+    <script src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'node_modules/jqvmap/dist/jquery.vmap.min.js' %}"></script>
+    <script src="{% static 'node_modules/jqvmap/dist/maps/jquery.vmap.world.js' %}"></script>
+    <script src="{% static 'node_modules/jqvmap/examples/js/jquery.vmap.sampledata.js' %}"></script>
+    <script src="{% static 'node_modules/chart.js/dist/Chart.bundle.min.js' %}"></script>
 
-	<script src="https://d3js.org/d3.v3.min.js"></script>
-<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
+    <script>
 
+        const chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(75, 192, 192)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)',
+            pink: 'rgb(255, 99, 132)',
+            brown: 'rgb(178, 145, 47)',
+            cyan: 'rgb(128, 206, 225)',
+        };
 
+        window.chartColors = Object.values(chartColors);
 
+        const getPieChart = (values, labels) => {
+            const config = {
+                type: 'pie',
+                data: {
+                    datasets: [{
+                        data: values,
+                        backgroundColor: values.map((v, i) => window.chartColors[i]),
+                    }],
+                    labels: labels,
+                },
+                options: {
+                    responsive: true,
+                }
+            };
+            const ctx = document.getElementById('pie-chart-area').getContext('2d');
+            window.myPie = new Chart(ctx, config);
+        };
 
+        const getDonutChart = (values, labels) => {
+            const config = {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: values,
+                        backgroundColor: values.map((v, i) => window.chartColors[i]),
+                    }],
+                    labels: labels,
+                },
+                options: {
+                    responsive: true,
+                }
+            };
+            const ctx = document.getElementById('donut-chart-area').getContext('2d');
+            window.myDonut = new Chart(ctx, config);
+        };
 
+        $.ajax({
+            dataType: "json",
+            url: '/training/get_training_per_country',
+            success: (data, textStatus, jqXHR) => {
+                const values = data.map(item => item.total);
+                const labels = data.map(item => item.country);
+                getPieChart(values, labels);
+            },
+        });
 
-    	<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-        <script src="{% static 'training/js/dist/jquery.vmap.js' %}"></script>
-        <script src="{% static 'training/js/dist/maps/jquery.vmap.world.js' %}"></script>
-        <script src="{% static 'training/js/examples/js/jquery.vmap.sampledata.js' %}"></script>
+        $.ajax({
+            dataType: "json",
+            url: '/training/get_participant_gender_per_country',
+            success: (data, textStatus, jqXHR) => {
+                window.participantGenredPerCountry = data;
+                const genderTotal = window.participantGenredPerCountry.reduce((accumulator, currentValue, currentIndex, array) => {
+                    (currentValue.gender === 'F') ? accumulator['F'] += currentValue.total : accumulator['M'] += currentValue.total;
+                    return accumulator;
+                }, {'F': 0, 'M': 0});
+                $('#gender-female').text('Female: ' + genderTotal['F']);
+                $('#gender-male').text('Male: ' + genderTotal['M']);
+            },
+        });
 
-
-        <script>
-        jQuery('#map').vectorMap({
+        $('#map').vectorMap({
             map: 'world_en',
             backgroundcolor: '#ffffff',
             color: '#ffffff',
@@ -44,17 +120,25 @@
             showTooltip: true,
             values: sample_data,
             scaleColors: ['#C8EEFF', '#006491'],
-            normalizeFunction: 'polynomial'
+            normalizeFunction: 'polynomial',
+            onLabelShow: (event, label, code) => {
+                event.preventDefault();
+            },
+            onRegionOver: (event, code) => {
+                event.preventDefault();
+            },
+            onRegionClick: (element, code, region) => {
+                $('#selected-country').text(code.toUpperCase() + ' - ' + region);
+                const genderByCountry = window.participantGenredPerCountry.reduce((accumulator, currentValue, currentIndex, array) => {
+                    if (currentValue.country.toUpperCase() === region.toUpperCase()) {
+                        (currentValue.gender === 'F') ? accumulator['F'] += currentValue.total : accumulator['M'] += currentValue.total;
+                    }
+                    return accumulator;
+                }, {'F': 0, 'M': 0});
+                getDonutChart([genderByCountry['F'], genderByCountry['M']], ['Female', 'Male']);
+            },
         });
-        </script>
 
-
-
-        <script>
-
-
-        </script>
-
-
+    </script>
 
 {% endblock %}
