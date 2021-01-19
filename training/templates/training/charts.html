@@ -23,8 +23,8 @@
     <script src="{% static 'node_modules/jquery/dist/jquery.min.js' %}"></script>
     <script src="{% static 'node_modules/jqvmap/dist/jquery.vmap.min.js' %}"></script>
     <script src="{% static 'node_modules/jqvmap/dist/maps/jquery.vmap.world.js' %}"></script>
-    <script src="{% static 'node_modules/jqvmap/examples/js/jquery.vmap.sampledata.js' %}"></script>
-    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+    <!-- <script src="{% static 'node_modules/jqvmap/examples/js/jquery.vmap.sampledata.js' %}"></script> -->
+    <script src="{% static 'node_modules/highcharts/highcharts.src.js' %}"></script>
 
     <script>
 
@@ -41,7 +41,7 @@
                     text: 'Training by Country'
                 },
                 tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                    pointFormat: '{series.name}: <b>{point.y}</b>'
                 },
                 accessibility: {
                     point: {
@@ -54,20 +54,23 @@
                         cursor: 'pointer',
                         dataLabels: {
                             enabled: true,
-                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                            format: '<b>{point.name}</b>: {point.percentage:.1f}%'
                         }
                     }
                 },
                 series: [{
-                    name: 'Brands',
+                    name: 'Trainings',
                     colorByPoint: true,
                     data: data
-                }]
+                }],
+                credits: {
+                    enabled: false
+                },
             });
         };
 
         const getDonutChart = (title, values, labels) => {
-            const data = labels.map((label, i) => [label, values[i]]);
+            const data = labels.map((label, i) => [`${label} - ${values[i]}`, values[i]]);
             Highcharts.chart('donut-chart-area', {
                 chart: {
                     plotBackgroundColor: null,
@@ -104,15 +107,19 @@
                 },
                 series: [{
                     type: 'pie',
-                    name: 'Browser share',
+                    name: 'Partecipants',
                     innerSize: '50%',
                     data: data,
-                }]
+                }],
+                credits: {
+                    enabled: false
+                },
             });
 
         };
 
         $.ajax({
+            async: false,
             dataType: "json",
             url: '/training/get_training_per_country',
             success: (data, textStatus, jqXHR) => {
@@ -123,15 +130,16 @@
         });
 
         $.ajax({
+            async: false,
             dataType: "json",
             url: '/training/get_participant_gender_per_country',
             success: (data, textStatus, jqXHR) => {
                 window.participantGenredPerCountry = data;
                 const genderTotal = window.participantGenredPerCountry.reduce((accumulator, currentValue, currentIndex, array) => {
-                    (currentValue.gender === 'F') ? accumulator['F'] += currentValue.total : accumulator['M'] += currentValue.total;
+                    accumulator[currentValue.gender] += currentValue.total;
                     return accumulator;
-                }, {'F': 0, 'M': 0});
-                getDonutChart('World', [genderTotal['F'], genderTotal['M']], ['Female', 'Male']);
+                }, {'F': 0, 'M': 0, 'X': 0});
+                getDonutChart('World', [genderTotal['F'], genderTotal['M'], genderTotal['X']], ['Female', 'Male', 'Not specified']);
             },
         });
 
@@ -143,23 +151,19 @@
             selectedColor: '#ffaaaa',
             enableZoom: false,
             showTooltip: true,
-            values: sample_data,
+            values: {},
             scaleColors: ['#C8EEFF', '#006491'],
             normalizeFunction: 'polynomial',
-            onLabelShow: (event, label, code) => {
-                event.preventDefault();
-            },
-            onRegionOver: (event, code) => {
-                event.preventDefault();
-            },
+            onLabelShow: (e, el, code) => e.preventDefault(),
+            onRegionLabelShow: (e, el, code) => e.preventDefault(),
             onRegionClick: (element, code, region) => {
                 const genderByCountry = window.participantGenredPerCountry.reduce((accumulator, currentValue, currentIndex, array) => {
                     if (currentValue.country.toUpperCase() === region.toUpperCase()) {
-                        (currentValue.gender === 'F') ? accumulator['F'] += currentValue.total : accumulator['M'] += currentValue.total;
+                        accumulator[currentValue.gender] += currentValue.total;
                     }
                     return accumulator;
-                }, {'F': 0, 'M': 0});
-                getDonutChart(code.toUpperCase() + ' - ' + region, [genderByCountry['F'], genderByCountry['M']], ['Female', 'Male']);
+                }, {'F': 0, 'M': 0, 'X': 0});
+                getDonutChart(`${region} - ${code.toUpperCase()}`, [genderByCountry['F'], genderByCountry['M'], genderByCountry['X']], ['Female', 'Male', 'Not specified']);
             },
         });
 

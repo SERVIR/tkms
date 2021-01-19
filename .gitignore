@@ -1,3 +1,5 @@
 *__pycache__*
 db.sqlite3
 .idea/
+staticfiles/node_modules
+training/static/node_modules
