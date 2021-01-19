@@ -124,11 +124,12 @@ class Participantorganization(models.Model):
 class Participant(models.Model):
 	GENDER_CHOICES = (
 		("M", "Male"),
-		("F", "Female")
+		("F", "Female"),
+		("X", "Not specified")
 	)
 	organization = models.ForeignKey(Participantorganization, on_delete=models.CASCADE)
 	role = models.CharField(max_length=200, help_text="Role within organization")
-	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="M")
+	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="X")
 	country = models.CharField(max_length=100, help_text="Country of residence")
 	presurveycompleted = models.BooleanField()
 	postsurveycompleted = models.BooleanField()
@@ -158,12 +159,13 @@ class Service(models.Model):
 class Trainer(models.Model):
 	GENDER_CHOICES = (
 		("M", "Male"),
-		("F", "Female")
+		("F", "Female"),
+		("X", "Not specified")
 	)
 	name = models.CharField(max_length=300)
 	organization = models.ForeignKey(Participantorganization, on_delete=models.CASCADE)
 	role = models.CharField(max_length=200, help_text="Role within organization")
-	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="M")
+	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="X")
 
 	def __str__(self):
 		return self.name

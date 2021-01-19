@@ -24,6 +24,9 @@ urlpatterns = [
     path("addtraining", views.addtraining, name="addtraining"),
     path("get_newsreference", views.get_newsreference, name="get_newsreference"),
     path("register", views.register, name="register"),
+    # API
+    path('get_training_per_country', views.TrainingViewSet.as_view({'get': 'get_training_per_country'})),
+    path('get_participant_gender_per_country', views.PartecipantViewSet.as_view({'get': 'get_participant_gender_per_country'})),
     # REST API patterns
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),

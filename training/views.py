@@ -2,6 +2,10 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from training.models import Keyword, Organization, Resource, Newsreference, Participantorganization, Participant, Trainer, Training
 from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import action
+from rest_framework import status
+from django.db.models import Count
+from django.core import serializers
 
 from .forms import get_newsreference
 
@@ -148,9 +152,25 @@ def charts(request):
 
 from rest_framework import viewsets
 from .serializers import TrainingSerializer
+import json
 
 class TrainingViewSet(viewsets.ModelViewSet):
-	#queryset = Training.objects.all().order_by('hub')
+
 	queryset = Training.objects.all().order_by('country')
-	#attendanceFemales
 	serializer_class = TrainingSerializer
+
+	@action(methods=['get'], detail=True)
+	def get_training_per_country(self, request, pk=None):
+		qs = Training.objects.values('country').annotate(total=Count('country')).order_by('total')
+		qs_json = json.dumps(list(qs))
+		return HttpResponse(qs_json, content_type='application/json')
+
+class PartecipantViewSet(viewsets.ModelViewSet):
+
+	queryset = Participant.objects.all()
+
+	@action(methods=['get'], detail=True)
+	def get_participant_gender_per_country(self, request, pk=None):
+		qs = Participant.objects.values('country', 'gender').annotate(total=Count('country')).order_by('total')
+		qs_json = json.dumps(list(qs))
+		return HttpResponse(qs_json, content_type='application/json')
