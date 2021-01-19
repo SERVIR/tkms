@@ -12,17 +12,10 @@
 <div style="text-align: center; margin-top: 1rem;">
     <div id="charts" class="row">
         <div id="chart1" class="col-6">
-            <h5>Training by Country</h5>
-            <canvas id="pie-chart-area"></canvas>
-            <div class="row mt-3">
-                <div id="gender-female" class="col-6">0</div>
-                <div id="gender-male" class="col-6">0</div>
-            </div>
+            <div id="pie-chart-area"></div>
         </div>
         <div id="chart2" class="col-6">
-            <h5>Participant by Gender</h5>
-            <h6 id="selected-country"></h6>
-            <canvas id="donut-chart-area"></canvas>
+            <div id="donut-chart-area"></div>
         </div>
     </div>
 </div>
@@ -31,59 +24,92 @@
     <script src="{% static 'node_modules/jqvmap/dist/jquery.vmap.min.js' %}"></script>
     <script src="{% static 'node_modules/jqvmap/dist/maps/jquery.vmap.world.js' %}"></script>
     <script src="{% static 'node_modules/jqvmap/examples/js/jquery.vmap.sampledata.js' %}"></script>
-    <script src="{% static 'node_modules/chart.js/dist/Chart.bundle.min.js' %}"></script>
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
 
     <script>
 
-        const chartColors = {
-            red: 'rgb(255, 99, 132)',
-            orange: 'rgb(255, 159, 64)',
-            yellow: 'rgb(255, 205, 86)',
-            green: 'rgb(75, 192, 192)',
-            blue: 'rgb(54, 162, 235)',
-            purple: 'rgb(153, 102, 255)',
-            grey: 'rgb(201, 203, 207)',
-            pink: 'rgb(255, 99, 132)',
-            brown: 'rgb(178, 145, 47)',
-            cyan: 'rgb(128, 206, 225)',
-        };
-
-        window.chartColors = Object.values(chartColors);
-
         const getPieChart = (values, labels) => {
-            const config = {
-                type: 'pie',
-                data: {
-                    datasets: [{
-                        data: values,
-                        backgroundColor: values.map((v, i) => window.chartColors[i]),
-                    }],
-                    labels: labels,
+            const data = labels.map((label, i) => Object({ name: label, y: values[i]}));
+            Highcharts.chart('pie-chart-area', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: null,
+                    plotShadow: false,
+                    type: 'pie'
                 },
-                options: {
-                    responsive: true,
-                }
-            };
-            const ctx = document.getElementById('pie-chart-area').getContext('2d');
-            window.myPie = new Chart(ctx, config);
+                title: {
+                    text: 'Training by Country'
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                            enabled: true,
+                            format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                    }
+                },
+                series: [{
+                    name: 'Brands',
+                    colorByPoint: true,
+                    data: data
+                }]
+            });
         };
 
-        const getDonutChart = (values, labels) => {
-            const config = {
-                type: 'doughnut',
-                data: {
-                    datasets: [{
-                        data: values,
-                        backgroundColor: values.map((v, i) => window.chartColors[i]),
-                    }],
-                    labels: labels,
+        const getDonutChart = (title, values, labels) => {
+            const data = labels.map((label, i) => [label, values[i]]);
+            Highcharts.chart('donut-chart-area', {
+                chart: {
+                    plotBackgroundColor: null,
+                    plotBorderWidth: 0,
+                    plotShadow: false
                 },
-                options: {
-                    responsive: true,
-                }
-            };
-            const ctx = document.getElementById('donut-chart-area').getContext('2d');
-            window.myDonut = new Chart(ctx, config);
+                title: {
+                    text: 'Participant by Gender - ' + title,
+                    align: 'center',
+                },
+                tooltip: {
+                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+                },
+                accessibility: {
+                    point: {
+                        valueSuffix: '%'
+                    }
+                },
+                plotOptions: {
+                    pie: {
+                        dataLabels: {
+                            enabled: true,
+                            distance: -50,
+                            style: {
+                                fontWeight: 'bold',
+                                color: 'white'
+                            }
+                        },
+                        startAngle: -90,
+                        endAngle: 90,
+                        center: ['50%', '75%'],
+                        size: '110%'
+                    }
+                },
+                series: [{
+                    type: 'pie',
+                    name: 'Browser share',
+                    innerSize: '50%',
+                    data: data,
+                }]
+            });
+
         };
 
         $.ajax({
@@ -105,8 +131,7 @@
                     (currentValue.gender === 'F') ? accumulator['F'] += currentValue.total : accumulator['M'] += currentValue.total;
                     return accumulator;
                 }, {'F': 0, 'M': 0});
-                $('#gender-female').text('Female: ' + genderTotal['F']);
-                $('#gender-male').text('Male: ' + genderTotal['M']);
+                getDonutChart('World', [genderTotal['F'], genderTotal['M']], ['Female', 'Male']);
             },
         });
 
@@ -128,14 +153,13 @@
                 event.preventDefault();
             },
             onRegionClick: (element, code, region) => {
-                $('#selected-country').text(code.toUpperCase() + ' - ' + region);
                 const genderByCountry = window.participantGenredPerCountry.reduce((accumulator, currentValue, currentIndex, array) => {
                     if (currentValue.country.toUpperCase() === region.toUpperCase()) {
                         (currentValue.gender === 'F') ? accumulator['F'] += currentValue.total : accumulator['M'] += currentValue.total;
                     }
                     return accumulator;
                 }, {'F': 0, 'M': 0});
-                getDonutChart([genderByCountry['F'], genderByCountry['M']], ['Female', 'Male']);
+                getDonutChart(code.toUpperCase() + ' - ' + region, [genderByCountry['F'], genderByCountry['M']], ['Female', 'Male']);
             },
         });
 
