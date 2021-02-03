@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from training.models import Keyword, Organization, Resource, Newsreference, Participantorganization, Participant, Trainer, Training
+from training.models import Keyword, Resource, Newsreference, Participantorganization, Participant, Trainer, Training
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import action
 from rest_framework import status
@@ -57,7 +57,7 @@ def events(request):
 		'event_records': event_records,
 		'info': '',
 		'order_by': order_by,
-		'asc_des': asc_des, 
+		'asc_des': asc_des,
 	}
 
 	return render(request, "training/events.html", context=content)
@@ -93,7 +93,7 @@ def resources(request):
 	for r in resource_records:
 		if Training.objects.filter(resource=r.id).count() > 0:
 			r.t = Training.objects.filter(resource=r.id)[0]
-		
+
 	content = {
 		'resource_records': resource_records,
 		'info': '',

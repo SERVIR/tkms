@@ -38,30 +38,30 @@ class DataSource(models.Model):
 #
 # NOTE: Organization will be removed from the final model (replaced by Hub) - once all references to it are removed
 #
-class Organization(models.Model):
-	REGION_CHOICES = (
-		(1, "Eastern & Southern Africa"),
-		(2, "Hindu Kush Himalaya"),
-		(3, "Lower Mekong River"),
-		(4, "West Africa"),
-		(5, "Amazonia"),
-		(6, "Central America")
-	)
-	hub = models.CharField(max_length=100, help_text="Hub Name", default="")
-	name = models.CharField(max_length=200, help_text="Hub Organization/Consortium Lead", default="")
-	acronym = models.CharField(max_length=50)
-	phone = models.CharField(max_length=20)
-	address = models.CharField(max_length=500)
-	url = models.URLField(help_text="Organization Site", default="http://", blank=True)
-	logo = models.ImageField()
-	email = models.EmailField()
-	cb_lead = models.CharField(max_length=200)
-	region = models.IntegerField(choices=REGION_CHOICES, blank=True)
-	def __str__(self):
-		return self.acronym
-
-	def region_verbose(self):
-		return dict(Organization.REGION_CHOICES)[self.region]
+# class Organization(models.Model):
+# 	REGION_CHOICES = (
+# 		(1, "Eastern & Southern Africa"),
+# 		(2, "Hindu Kush Himalaya"),
+# 		(3, "Lower Mekong River"),
+# 		(4, "West Africa"),
+# 		(5, "Amazonia"),
+# 		(6, "Central America")
+# 	)
+# 	hub = models.CharField(max_length=100, help_text="Hub Name", default="")
+# 	name = models.CharField(max_length=200, help_text="Hub Organization/Consortium Lead", default="")
+# 	acronym = models.CharField(max_length=50)
+# 	phone = models.CharField(max_length=20)
+# 	address = models.CharField(max_length=500)
+# 	url = models.URLField(help_text="Organization Site", default="http://", blank=True)
+# 	logo = models.ImageField()
+# 	email = models.EmailField()
+# 	cb_lead = models.CharField(max_length=200)
+# 	region = models.IntegerField(choices=REGION_CHOICES, blank=True)
+# 	def __str__(self):
+# 		return self.acronym
+#
+# 	def region_verbose(self):
+# 		return dict(Organization.REGION_CHOICES)[self.region]
 
 # 2020-07-17: Hub model will replace Organization model in a second step, after the records
 # 			  from Organization have been copied and references have been updated in related models
@@ -272,6 +272,7 @@ class Training(models.Model):
 
 	def lead_verbose(self):
 		return dict(Training.LEAD_CHOICES)[self.lead]
+
 
 class Newsreference(models.Model):
 	id = models.AutoField(primary_key=True)

@@ -12,7 +12,7 @@ import numpy as np
 
 # Register your models here.
 
-from .models import Organization
+# from .models import Organization
 from .models import Training
 from .models import Resource
 from .models import Newsreference
@@ -25,7 +25,7 @@ from .models import Service
 from .models import Hub
 from .models import DataSource
 
-admin.site.register(Organization)
+# admin.site.register(Organization)
 admin.site.register(Hub)
 # admin.site.register(Training)
 # admin.site.register(Resource)
@@ -109,9 +109,22 @@ class TrainingAdmin(admin.ModelAdmin):
     - filters that will be displayed in sidebar (list_filter)
     """
     object_id = None
-    list_display = ('starts', 'name', 'country', 'hub')
+    list_display = ('starts', 'name', 'country', 'hub', 'get_attendanceMale', 'get_attendanceFemale', 'get_attendanceNotSpecified')
     list_filter = ('serviceareas', 'hub', 'recordstatus', 'country')
     filter_horizontal = ('serviceareas', 'services', 'keywords', 'resources', 'dataSource', 'participantorganizations', 'participants', 'trainingorganization', 'trainers')
+
+    def get_attendanceFemale(self, obj):
+        return obj.attendanceFemales
+    get_attendanceFemale.short_description = "F"
+
+    def get_attendanceMale(self, obj):
+        return obj.attendanceMales
+    get_attendanceMale.short_description = "M"
+
+    def get_attendanceNotSpecified(self, obj):
+        return obj.attendanceNotSpecified
+    get_attendanceNotSpecified.short_description = "N/S"
+
     fieldsets = (
         (None, {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'hub', 'contact', 'recordstatus')}),
         ("Related Services", {
@@ -145,7 +158,7 @@ class TrainingAdmin(admin.ModelAdmin):
 
         Opens a popup, where the user can upload a csv, with this csv
         creates the participants and adds all to the current Training,
-        then closes the opened popup. 
+        then closes the opened popup.
 
         Params:
             request: HttpRequest for this view
@@ -163,7 +176,7 @@ class TrainingAdmin(admin.ModelAdmin):
             data = pd.DataFrame(np.array(reader), columns=columns)
             print(data)
 
-            for index,df  in reader.iterrows():  
+            for index,df  in reader.iterrows():
 
                 presurveycompleted = True if df['Presurveycompleted'] == "TRUE" else False
                 postsurveycompleted = True if df['Postsurveycompleted'] == "TRUE" else False

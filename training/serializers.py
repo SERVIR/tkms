@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Training, Servicearea, Service, Organization
+from .models import Training, Servicearea, Service
 
 class ParticipantsSerializer(serializers.RelatedField):
      def to_representation(self, value):
@@ -17,5 +17,3 @@ class TrainingSerializer(serializers.HyperlinkedModelSerializer):
        # To do: Include 'serviceareas', 'services'
        #fields = ('name', 'starts', 'ends', 'country', 'description', 'trainingorganization')
        fields = ('country', 'attendanceFemales', 'attendanceMales', 'participants')
-
-
