@@ -172,23 +172,25 @@ class TrainingAdmin(admin.ModelAdmin):
             training = Training.objects.get(id=self.object_id)
 
             columns = ["Organization","Role","Gender","Country","Presurveycompleted","Postsurveycompleted","Usparticipantstate"]
-            print(columns)
             data = pd.DataFrame(np.array(reader), columns=columns)
-            print(data)
+
+            attendance = {"F": 0, "M": 0, "X": 0}
 
             for index,df  in reader.iterrows():
 
+                gender = "X" if df['Gender'] not in ("F", "M", "X") else df['Gender']
+                if gender == "F": attendance["F"] += 1
+                elif gender == "M": attendance["M"] += 1
+                else: attendance["X"] += 1
+
                 presurveycompleted = True if df['Presurveycompleted'] == "TRUE" else False
                 postsurveycompleted = True if df['Postsurveycompleted'] == "TRUE" else False
-
-                print(Participantorganization.objects.filter(
-                        name=df['Organization'])[0])
 
                 participant, created = Participant.objects.get_or_create(
                     organization=Participantorganization.objects.filter(
                         name=df['Organization'])[0],
                         role=df['Role'],
-                        gender=df['Gender'],
+                        gender=gender,
                         country=df['Country'],
                         presurveycompleted=presurveycompleted,
                         postsurveycompleted=postsurveycompleted,
@@ -203,6 +205,11 @@ class TrainingAdmin(admin.ModelAdmin):
                 )
                 training.participants.add(participant)
                 training.participantorganizations.add(participantorganization)
+
+            training.attendanceFemales = attendance.get("F", 0)
+            training.attendanceMales = attendance.get("M", 0)
+            training.attendanceNotSpecified = attendance.get("X", 0)
+
             training.save()
             return http.HttpResponse(
                 '<script type="text/javascript">window.opener.location.reload();window.close();</script>')
