@@ -4,7 +4,7 @@ from training.models import Keyword, Resource, Newsreference, Participantorganiz
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import action
 from rest_framework import status
-from django.db.models import Count
+from django.db.models import Count, Sum
 from django.core import serializers
 
 from .forms import get_newsreference
@@ -171,6 +171,11 @@ class PartecipantViewSet(viewsets.ModelViewSet):
 
 	@action(methods=['get'], detail=True)
 	def get_participant_gender_per_country(self, request, pk=None):
-		qs = Participant.objects.values('country', 'gender').annotate(total=Count('country')).order_by('total')
+		qs = Training.objects.values('country').annotate(
+			total=Sum('attendanceMales') + Sum('attendanceFemales') + Sum('attendanceNotSpecified'),
+			attendance_males=Sum('attendanceMales'),
+			attendance_females=Sum('attendanceFemales'),
+			attendance_not_specified=Sum('attendanceNotSpecified')
+		).order_by('total')
 		qs_json = json.dumps(list(qs))
 		return HttpResponse(qs_json, content_type='application/json')

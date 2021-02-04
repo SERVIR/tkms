@@ -135,7 +135,9 @@
             success: (data, textStatus, jqXHR) => {
                 window.participantGenredPerCountry = data;
                 const genderTotal = window.participantGenredPerCountry.reduce((accumulator, currentValue, currentIndex, array) => {
-                    accumulator[currentValue.gender] += currentValue.total;
+                    accumulator['F'] += currentValue.attendance_females || 0;
+                    accumulator['M'] += currentValue.attendance_males || 0;
+                    accumulator['X'] += currentValue.attendance_not_specified || 0;
                     return accumulator;
                 }, {'F': 0, 'M': 0, 'X': 0});
                 getDonutChart('World', [genderTotal['F'], genderTotal['M'], genderTotal['X']], ['Female', 'Male', 'Not specified']);
@@ -156,12 +158,12 @@
             onLabelShow: (e, el, code) => e.preventDefault(),
             onRegionLabelShow: (e, el, code) => e.preventDefault(),
             onRegionClick: (element, code, region) => {
-                const genderByCountry = window.participantGenredPerCountry.reduce((accumulator, currentValue, currentIndex, array) => {
-                    if (currentValue.country.toUpperCase() === region.toUpperCase()) {
-                        accumulator[currentValue.gender] += currentValue.total;
-                    }
-                    return accumulator;
-                }, {'F': 0, 'M': 0, 'X': 0});
+                const selectedCountry = window.participantGenredPerCountry.find(value => value.country.toUpperCase() === region.toUpperCase());
+                const genderByCountry = selectedCountry ? {
+                    'F': selectedCountry.attendance_females || 0,
+                    'M': selectedCountry.attendance_males || 0,
+                    'X': selectedCountry.attendance_not_specified || 0
+                } : {'F': 0, 'M': 0, 'X': 0};
                 getDonutChart(`${region} - ${code.toUpperCase()}`, [genderByCountry['F'], genderByCountry['M'], genderByCountry['X']], ['Female', 'Male', 'Not specified']);
             },
         });
