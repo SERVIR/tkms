@@ -169,7 +169,10 @@ class TrainingAdmin(admin.ModelAdmin):
         # TODO: somehow refresh the widget and show changes
         if request.method == 'POST':
             reader = pd.read_csv(request.FILES['csv_file'],sep=',')
+
             training = Training.objects.get(id=self.object_id)
+            training.participants.clear()
+            # training.participants.remove(*training.participants.all())
 
             columns = ["Organization","Role","Gender","Country","Presurveycompleted","Postsurveycompleted","Usparticipantstate"]
             data = pd.DataFrame(np.array(reader), columns=columns)
