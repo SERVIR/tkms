@@ -12,7 +12,10 @@
           country: "{{ rec.country }}",
           hub: "{{ rec.hub }}",
           format: "{{ rec.format_verbose }}",
-          servicearea: "{{ rec.servicearea_verbose }}"
+          servicearea: "{{ rec.servicearea_verbose }}",
+          attendanceFemales: "{{ rec.attendanceFemales }}",
+          attendanceMales: "{{ rec.attendanceMales }}",
+          attendanceNotSpecified: "{{ rec.attendanceNotSpecified }}",
         }
         {% endfor %}
     ]
@@ -49,7 +52,6 @@
 
       <!-- Begin: PARTICIPATING ORGANIZATIONS Section -->
       <div class="media text-muted pt-3">
-        <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
         <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
           <strong class="d-block text-gray-dark">Participating Organizations</strong>
           {% if participantorganizations_data %}
@@ -63,6 +65,19 @@
         </p>
       </div>
       <!-- End: PARTICIPATING ORGANIZATIONS Section -->
+
+      <!-- Begin: ATTENDANCE Section -->
+      <div class="media text-muted pt-3">
+        <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
+        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+          <strong class="d-block text-gray-dark">Attendance</strong>
+              <span class="badge">Female: {{ event_data.attendanceFemales }}</span> |
+              <span class="badge">Males: {{ event_data.attendanceMales }}</span> |
+              <span class="badge">Not Specified: {{ event_data.attendanceNotSpecified }}</span>
+          </p>
+      </div>
+      <!-- End: ATTENDANCE Section -->
+
 
       <small class="d-block text-right mt-3">
         <a href="#">More Information</a>

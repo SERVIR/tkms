@@ -94,6 +94,7 @@ class Hub(models.Model):
 
 class Participantorganization(models.Model):
 	ORGANIZATION_TYPE_CHOICES = (
+		(0, "-- NOT SPECIFIED --"),
 		(1, "Academic Institution"),
 		(2, "Consortium"),
 		(3, "Federal/Central Government"),
@@ -107,7 +108,7 @@ class Participantorganization(models.Model):
 		(11, "Miscellaneous/Other")
 	)
 	name = models.CharField(max_length=200)
-	organizationtype = models.IntegerField(choices=ORGANIZATION_TYPE_CHOICES, default=1, help_text="Organization Type")
+	organizationtype = models.IntegerField(choices=ORGANIZATION_TYPE_CHOICES, default=0, help_text="Organization Type")
 	acronym = models.CharField(max_length=50, blank=True)
 	url = models.URLField(blank=True, help_text="Organization Site")
 	country = models.CharField(max_length=100, help_text="Primary location (HQ)")
@@ -214,8 +215,8 @@ class Training(models.Model):
 	starts = models.DateField(blank=True)
 	ends = models.DateField(blank=True)
 	# application_deadline = models.DateField(blank=True)
-	city = models.CharField(max_length=100)
-	country = models.CharField(max_length=100)
+	city = models.CharField(max_length=100, help_text="Only required for in-person training", blank=True)
+	country = models.CharField(max_length=100, help_text="Only required for in-person training", blank=True)
 	description = models.TextField(blank=True, help_text="Brief description of the training")
 	# audience = models.CharField(max_length=2500, blank=True)
 	expectedoutcome = models.TextField(blank=True, help_text="Expected Outcome")
