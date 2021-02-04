@@ -126,20 +126,20 @@ class TrainingAdmin(admin.ModelAdmin):
     get_attendanceNotSpecified.short_description = "N/S"
 
     fieldsets = (
-        (None, {'fields':('name', 'starts', 'ends', 'country', 'city', 'language', 'hub', 'contact', 'recordstatus')}),
+        (None, {'fields':('name', 'starts', 'ends', 'format', 'country', 'city', 'language', 'hub', 'contact', 'recordstatus')}),
         ("Related Services", {
             'classes': ('collapse',),
             'fields':('serviceareas', 'otherservicearea', 'services', 'otherservice')}),
         ("Content", {
             'classes': ('collapse',),
-            'fields':('description','expectedoutcome','format','attendance','level','keywords','resources', 'dataSource')}),
+            'fields':('description','expectedoutcome','attendance','level','keywords','resources', 'dataSource')}),
         ("Evaluation", {
             'classes': ('collapse',),
             'fields':('presurvey','presurveylink','postsurvey','postsurveylink','newsreferences')}),
         ("Attendance", {
             'classes': ('collapse',),
             'fields':('participantorganizations','participants','trainingorganization', 'trainers','attendanceSheet')}),
-        ("Attendance count (if attendance sheet is not available)", {
+        ("Attendance count (Fill in if attendance sheet is not available)", {
             'classes': ('collapse',),
             'fields':('attendanceFemales', 'attendanceMales', 'attendanceNotSpecified')}),
         ("Administration", {
