@@ -133,8 +133,8 @@
             dataType: "json",
             url: '/training/get_participant_gender_per_country',
             success: (data, textStatus, jqXHR) => {
-                window.participantGenredPerCountry = data;
-                const genderTotal = window.participantGenredPerCountry.reduce((accumulator, currentValue, currentIndex, array) => {
+                window.participantGenrePerCountry = data;
+                const genderTotal = window.participantGenrePerCountry.reduce((accumulator, currentValue, currentIndex, array) => {
                     accumulator['F'] += currentValue.attendance_females || 0;
                     accumulator['M'] += currentValue.attendance_males || 0;
                     accumulator['X'] += currentValue.attendance_not_specified || 0;
@@ -158,7 +158,7 @@
             onLabelShow: (e, el, code) => e.preventDefault(),
             onRegionLabelShow: (e, el, code) => e.preventDefault(),
             onRegionClick: (element, code, region) => {
-                const selectedCountry = window.participantGenredPerCountry.find(value => value.country.toUpperCase() === region.toUpperCase());
+                const selectedCountry = window.participantGenrePerCountry.find(value => value.country.toUpperCase() === region.toUpperCase());
                 const genderByCountry = selectedCountry ? {
                     'F': selectedCountry.attendance_females || 0,
                     'M': selectedCountry.attendance_males || 0,
