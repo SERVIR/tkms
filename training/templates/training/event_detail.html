@@ -1,7 +1,9 @@
 {% extends "training/base.html" %}
 {% load static %}
 {% block content %}
+
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
 <script type="text/javascript">
     var events = [
       {% for rec in event_records %}
@@ -17,17 +19,27 @@
           attendanceMales: "{{ rec.attendanceMales }}",
           attendanceNotSpecified: "{{ rec.attendanceNotSpecified }}",
         }
-        {% endfor %}
-    ]
+      {% endfor %}
+    ];
 </script>
+
 <!-- <img class="img-fluid rounded" src="{% static 'training/events.jpg' %}"> -->
 {% if event_data %}
+
     <main role="main" class="container">
+
       <div class="my-3 p-3 bg-white rounded box-shadow">
         <h5 class="border-bottom border-gray pb-2 mb-0">{{ event_data.name }}</h5>
         <h6 class="border-bottom border-gray pb-2 mb-0">{{ event_data.hub }}</h6>
         <div class="media text-muted pt-3">
-          <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+          <!-- <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded"> -->
+          <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <strong class="d-block text-gray-dark">Contact</strong>
+            {{ event_data.contact | linebreaksbr }}
+          </p>
+        </div>
+        <div class="media text-muted pt-3">
+          <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">{{ event_data.city}}, {{ event_data.country }} - {{ event_data.starts }}</strong>
             {% if serviceareas_data %}
@@ -43,7 +55,7 @@
           </p>
         </div>
         <div class="media text-muted pt-3">
-          <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded">
+          <!-- <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded"> -->
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">Expected Outcome</strong>
             {{ event_data.expectedoutcome|linebreaksbr }}
@@ -57,10 +69,10 @@
           {% if participantorganizations_data %}
             {% for rec in participantorganizations_data %}
             {% if not forloop.first %} | {% endif %}
-                <span class="badge">{{ rec.name }} {% if rec.acronym != "" %} ({{ rec.acronym }}) {% endif %}</span>
+              <span class="badge">{{ rec.name }} {% if rec.acronym != "" %} ({{ rec.acronym }}) {% endif %}</span>
             {% endfor %}
           {% else %}
-          <p class="information">No info available on Participant Organization</p>
+            <p class="information">No info available on Participant Organization</p>
           {% endif %}
         </p>
       </div>
@@ -68,22 +80,21 @@
 
       <!-- Begin: ATTENDANCE Section -->
       <div class="media text-muted pt-3">
-        <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded">
+        <!-- <img data-src="holder.js/32x32?theme=thumb&bg=e83e8c&fg=e83e8c&size=1" alt="" class="mr-2 rounded"> -->
         <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
           <strong class="d-block text-gray-dark">Attendance</strong>
-              <span class="badge">Female: {{ event_data.attendanceFemales }}</span> |
-              <span class="badge">Males: {{ event_data.attendanceMales }}</span> |
-              <span class="badge">Not Specified: {{ event_data.attendanceNotSpecified }}</span>
-          </p>
+          <span class="badge">Female: {{ event_data.attendanceFemales }}</span> |
+          <span class="badge">Males: {{ event_data.attendanceMales }}</span> |
+          <span class="badge">Not Specified: {{ event_data.attendanceNotSpecified }}</span>
+        </p>
       </div>
       <!-- End: ATTENDANCE Section -->
-
 
       <small class="d-block text-right mt-3">
         <a href="#">More Information</a>
       </small>
-    </div>
 
+    </div>
 
       <!-- Begin: RESOURCES Section -->
       <div class="my-3 p-3 bg-white rounded box-shadow">
@@ -91,13 +102,11 @@
         {% if resource_data %}
         {% for rec in resource_data %}
           <div class="media text-muted pt-3">
-            <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
+            <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
             <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
               <div class="d-flex justify-content-between align-items-center w-100">
-
                 <strong class="text-gray-dark">{{ rec.name }}</strong>
                 <a href="{{ rec.location }}" target="_blank">{{ rec.resourcetype_verbose }}</a>
-
               </div>
               {% if rec.internaluse %}<div class="badge badge-warning">Internal Use</div>{% endif %}
               <span class="d-block">Author: {{ rec.author }}<br>{{ rec.abstract|linebreaksbr }}</span>
@@ -105,32 +114,65 @@
           </div>
         {% endfor %}
         {% else %}
-        <p class="information">Materials not uploaded yet!</p>
+          <p class="information">Materials not uploaded yet!</p>
         {% endif %}
       </div>
       <!-- End: RESOURCES Section -->
 
+      <!-- Begin: DATA SOURCES Section -->
+      <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">Data Source</h6>
+        {% if datasource_data %}
+          {% for ds in datasource_data %}
+            {% if not forloop.first %} | {% endif %}
+              <span class="badge">{{ ds.name }} ({{ ds.datatype_verbose }} - {{ ds.accesstype_verbose }})</span>
+            {% endfor %}
+          {% else %}
+            <p class="information">There are no Data Source for this training.</p>
+          {% endif %}
+      </div>
+      <!-- End: DATA SOURCES Section -->
+
+      <!-- Begin: TRAINERS Section -->
+      <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">Trainers</h6>
+        {% if trainers %}
+          {% for t in trainers %}
+            {% if not forloop.first %} | {% endif %}
+              <span class="badge">{{ t.name }} ({{ t.gender }})</span>
+            {% endfor %}
+          {% else %}
+            <p class="information">There are no Trainers for this training.</p>
+          {% endif %}
+      </div>
+      <!-- End: TRAINERS Section -->
 
       <!-- Begin: INTERNAL NOTES Section -->
       <div class="my-3 p-3 bg-white rounded box-shadow">
-        <h6 class="border-bottom border-gray pb-2 mb-0">Internal Notes<svg class="bi bi-alert-circle" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path fill-rule="evenodd" d="M10 17a7 7 0 100-14 7 7 0 000 14zm0 1a8 8 0 100-16 8 8 0 000 16z" clip-rule="evenodd"></path>
-  <path d="M9.002 13a1 1 0 112 0 1 1 0 01-2 0zM9.1 6.995a.905.905 0 111.8 0l-.35 3.507a.553.553 0 01-1.1 0L9.1 6.995z"></path>
-</svg></h6>
-          <div class="media text-muted pt-3">
-            <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded">
-            <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-              <div class="d-flex justify-content-between align-items-center w-100">
-                <strong class="text-gray-dark">Accesible to TKMS contributors Only</strong>
-              </div>
-              <span class="d-block">
-                {{ event_data.internalnotes|linebreaksbr }}<br>
-                <a href="{{ event_data.presurveylink }}" target="_blank">Pre-event Survey</a><br>
-                <a href="{{ event_data.postsurveylink }}" target="_blank">Post-event Survey</a>
-              </span>
+        <h6 class="border-bottom border-gray pb-2 mb-0">Internal Notes<svg class="bi bi-alert-circle" width="1em" height="1em" viewBox="0 0 20 20" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 17a7 7 0 100-14 7 7 0 000 14zm0 1a8 8 0 100-16 8 8 0 000 16z" clip-rule="evenodd"></path><path d="M9.002 13a1 1 0 112 0 1 1 0 01-2 0zM9.1 6.995a.905.905 0 111.8 0l-.35 3.507a.553.553 0 01-1.1 0L9.1 6.995z"></path></svg></h6>
+        <div class="media text-muted pt-3">
+          <!-- <img data-src="holder.js/32x32?theme=thumb&bg=007bff&fg=007bff&size=1" alt="" class="mr-2 rounded"> -->
+          <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+            <div class="d-flex justify-content-between align-items-center w-100">
+              <strong class="text-gray-dark">Accessible to TKMS contributors Only</strong>
             </div>
+            <span class="d-block">
+              {% if event_data.internalnotes %}
+                <div>{{ event_data.internalnotes }}</div>
+              {% endif %}
+              {% if event_data.sharedorgnotes %}
+                <div>{{ event_data.sharedorgnotes }}</div>
+              {% endif %}
+              {% if event_data.presurvey %}
+                <div><a href="{{ event_data.presurveylink }}" target="_blank">Pre-event Survey</a></div>
+              {% endif %}
+              {% if event_data.postsurvey %}
+                <div><a href="{{ event_data.postsurveylink }}" target="_blank">Post-event Survey</a></div>
+              {% endif %}
+            </span>
           </div>
         </div>
+      </div>
       <!-- End: INTERNAL NOTES Section -->
 
         <small class="d-block text-right mt-3">

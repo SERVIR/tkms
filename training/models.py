@@ -4,7 +4,6 @@ from datetime import datetime
 from django.db import models
 from django.utils import timezone
 
-
 # Create your models here.
 
 class Keyword(models.Model):
@@ -34,6 +33,12 @@ class DataSource(models.Model):
 		ordering = ('name',)
 	def __str__(self):
 		return self.name
+
+	def datatype_verbose(self):
+		return dict(DataSource.DATA_TYPE_CHOICES)[self.dataType]
+
+	def accesstype_verbose(self):
+		return dict(DataSource.ACCESS_TYPE_CHOICES)[self.accessType]
 
 #
 # NOTE: Organization will be removed from the final model (replaced by Hub) - once all references to it are removed
@@ -91,7 +96,6 @@ class Hub(models.Model):
 	def __str__(self):
 		return self.hub_short_name
 
-
 class Participantorganization(models.Model):
 	ORGANIZATION_TYPE_CHOICES = (
 		(0, "-- NOT SPECIFIED --"),
@@ -120,7 +124,6 @@ class Participantorganization(models.Model):
 
 	def organizationtype_verbose(self):
 		return dict(Participantorganization.ORGANIZATION_TYPE_CHOICES)[self.organizationtype]
-
 
 class Participant(models.Model):
 	GENDER_CHOICES = (
@@ -273,7 +276,6 @@ class Training(models.Model):
 
 	def lead_verbose(self):
 		return dict(Training.LEAD_CHOICES)[self.lead]
-
 
 class Newsreference(models.Model):
 	id = models.AutoField(primary_key=True)

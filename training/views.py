@@ -71,11 +71,15 @@ def event_detail(request, eventid):
 	serviceareas_data = event_data.serviceareas.all()
 	services_data = event_data.services.all()
 	participantorganizations_data = event_data.participantorganizations.all()
+	datasource_data = event_data.dataSource.all()
+	trainers = event_data.trainers.all()
 	content = {'event_data': event_data,
 			   'resource_data': resource_data,
 			   'serviceareas_data': serviceareas_data,
 			   'services_data': services_data,
 			   'participantorganizations_data': participantorganizations_data,
+			   'datasource_data': datasource_data,
+			   'trainers': trainers,
 			   'info': '',}
 	return render(request, "training/event_detail.html", context=content)
 
