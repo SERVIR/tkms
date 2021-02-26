@@ -35,7 +35,11 @@
           <!-- <img data-src="holder.js/32x32?theme=thumb&bg=6f42c1&fg=6f42c1&size=1" alt="" class="mr-2 rounded"> -->
           <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
             <strong class="d-block text-gray-dark">Contact</strong>
-            {{ event_data.contact | linebreaksbr }}
+            {% if event_data.contact %}
+              <a href="mailto:{{ event_data.contact }}">{{ event_data.contact }}</a>
+            {% else %}
+              Contact not available.
+            {% endif %}
           </p>
         </div>
         <div class="media text-muted pt-3">
