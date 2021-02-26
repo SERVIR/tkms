@@ -133,7 +133,7 @@ class TrainingAdmin(admin.ModelAdmin):
             'fields':('description','expectedoutcome','attendance','level','keywords','resources', 'dataSource')}),
         ("Evaluation", {
             'classes': ('collapse',),
-            'fields':('presurvey','presurveylink','postsurvey','postsurveylink')}),
+            'fields':('presurveylink','postsurveylink')}),
         ("Attendance", {
             'classes': ('collapse',),
             'fields':('participantorganizations','participants','trainingorganization', 'trainers')}),
