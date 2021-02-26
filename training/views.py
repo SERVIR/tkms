@@ -1,13 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from training.models import Keyword, Resource, Newsreference, Participantorganization, Participant, Trainer, Training
+from training.models import Keyword, Resource, Participantorganization, Participant, Trainer, Training
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import action
 from rest_framework import status
 from django.db.models import Count, Sum
 from django.core import serializers
-
-from .forms import get_newsreference
 
 # Create your views here.
 def index(request):
@@ -26,21 +24,6 @@ def upcoming(request):
 
 def addtraining(request):
 	return HttpResponse("<h1>Add a training event</h1><hr>Welcome to the SERVIR training application")
-
-def get_newsreference(request):
-	# POST method: process the form data
-	if request.method == 'POST':
-		form = newsreferenceform(request.POST)
-		# check whether it's valid:
-		if form.is_valid():
-			# process the data in form.cleaned_data as required
-			# ...
-			# redirect to a new URL
-			return HttpResponseRedirect('/newsreferencecaptured/')
-		# if GET (or any other method), create a blank form
-		else:
-			form = newsreferenceform()
-		return render(request, 'get_newsreference.html', {'form': form})
 
 @login_required
 def events(request):

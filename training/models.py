@@ -241,7 +241,6 @@ class Training(models.Model):
 	postsurveylink = models.URLField(help_text="Location of post-survey link", blank=True)
 	keywords = models.ManyToManyField(Keyword, blank=True)
 	resources = models.ManyToManyField('Resource', blank=True)
-	newsreferences = models.ManyToManyField('Newsreference', blank=True)
 	participantorganizations = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainees)")
 	trainingorganization = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainers)", related_name="training_orgs")
 	participants = models.ManyToManyField(Participant, blank=True)
@@ -276,19 +275,6 @@ class Training(models.Model):
 
 	def lead_verbose(self):
 		return dict(Training.LEAD_CHOICES)[self.lead]
-
-class Newsreference(models.Model):
-	id = models.AutoField(primary_key=True)
-	title = models.CharField(max_length=255, help_text="Article title")
-	datepublished = models.DateField(help_text="Date Published", null=True)
-	url = models.URLField(help_text="Location of the article")
-	source = models.CharField(max_length=100, help_text="Publisher", null=True)
-	abstract = models.TextField(blank=True)
-	trainings = models.ManyToManyField(Training, through=Training.newsreferences.through, help_text="Related Training Events", blank=True)
-	class Meta:
-		ordering = ('source',)
-	def __str__(self):
-		return self.title
 
 class Resource(models.Model):
 	RESOURCE_TYPE_CHOICES = (

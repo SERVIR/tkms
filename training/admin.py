@@ -15,7 +15,6 @@ import numpy as np
 # from .models import Organization
 from .models import Training
 from .models import Resource
-from .models import Newsreference
 from .models import Participantorganization
 from .models import Participant
 from .models import Trainer
@@ -29,7 +28,6 @@ from .models import DataSource
 admin.site.register(Hub)
 # admin.site.register(Training)
 # admin.site.register(Resource)
-# admin.site.register(Newsreference)
 # admin.site.register(Participantorganization)
 # admin.site.register(Participant)
 # admin.site.register(Trainer)
@@ -135,7 +133,7 @@ class TrainingAdmin(admin.ModelAdmin):
             'fields':('description','expectedoutcome','attendance','level','keywords','resources', 'dataSource')}),
         ("Evaluation", {
             'classes': ('collapse',),
-            'fields':('presurvey','presurveylink','postsurvey','postsurveylink','newsreferences')}),
+            'fields':('presurvey','presurveylink','postsurvey','postsurveylink')}),
         ("Attendance", {
             'classes': ('collapse',),
             'fields':('participantorganizations','participants','trainingorganization', 'trainers','attendanceSheet')}),
@@ -243,15 +241,4 @@ class ResourceAdmin(admin.ModelAdmin):
     """
     list_display = ('name', 'author', 'added', 'resourcetype', 'hub', 'internaluse')
     list_filter = ('hub', 'internaluse', 'resourcetype', 'author', 'added')
-    filter_horizontal = ("trainings",)
-
-@admin.register(Newsreference)
-class NewsreferenceAdmin(admin.ModelAdmin):
-    """Administration object for Newsreference model
-    Defines:
-    - fields to be displayed in list view (list_display)
-    - filters that will be displayed in sidebar (list_filter)
-    """
-    list_display = ('datepublished', 'title', 'source', 'url')
-    list_filter = ('source', 'datepublished')
     filter_horizontal = ("trainings",)

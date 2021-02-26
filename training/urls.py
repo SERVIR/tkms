@@ -22,7 +22,6 @@ urlpatterns = [
     # System Management Items
     path("upcoming", views.upcoming, name="upcoming"),
     path("addtraining", views.addtraining, name="addtraining"),
-    path("get_newsreference", views.get_newsreference, name="get_newsreference"),
     path("register", views.register, name="register"),
     # API
     path('get_training_per_country', views.TrainingViewSet.as_view({'get': 'get_training_per_country'})),
