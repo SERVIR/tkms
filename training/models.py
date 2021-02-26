@@ -247,8 +247,6 @@ class Training(models.Model):
 	trainers = models.ManyToManyField(Trainer, blank=True)
 
 	# Brief statistics of participantorganizations
-	# Attendance Sheet will be saved to MEDIA_ROOT/uploads/yyyy/mm/dd
-	attendanceSheet = models.FileField(help_text="NOT FUNCTIONAL YET. Will be used to upload spreadsheet", blank=True, upload_to='uploads/%Y/%m/%d/')
 	attendanceMales = models.IntegerField(help_text='Number of male participants', blank=True, null=True)
 	attendanceFemales = models.IntegerField(help_text='Number of female participants', blank=True, null=True)
 	attendanceNotSpecified = models.IntegerField(help_text='Number of participants (gender not specified)', blank=True, null=True)

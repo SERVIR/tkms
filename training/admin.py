@@ -136,7 +136,7 @@ class TrainingAdmin(admin.ModelAdmin):
             'fields':('presurvey','presurveylink','postsurvey','postsurveylink')}),
         ("Attendance", {
             'classes': ('collapse',),
-            'fields':('participantorganizations','participants','trainingorganization', 'trainers','attendanceSheet')}),
+            'fields':('participantorganizations','participants','trainingorganization', 'trainers')}),
         ("Attendance count (Fill in if attendance sheet is not available)", {
             'classes': ('collapse',),
             'fields':('attendanceFemales', 'attendanceMales', 'attendanceNotSpecified')}),
