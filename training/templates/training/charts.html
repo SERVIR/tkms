@@ -3,12 +3,16 @@
 {% block content %}
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<h2 class="border-bottom border-gray pb-2 mb-0">GeoSpatial Charts</h2>
-<p class="small"></p>
+<h1>GeoSpatial Charts</h1>
 
-<div id="mapdiv" style="display: inline;">
+<!-- <div id="mapdiv" style="display: inline;">
     <svg id="map" width="100%" height="400"></svg>
-</div>
+</div> -->
+
+<select id="select-region" class="form-control">
+    <option value="">Select a region</option>
+</select>
+
 <div style="text-align: center; margin-top: 1rem;">
     <div id="charts" class="row">
         <div id="chart1" class="col-6">
@@ -20,8 +24,8 @@
     </div>
 </div>
 
-    <script src="{% static 'node_modules/jqvmap/dist/jquery.vmap.min.js' %}"></script>
-    <script src="{% static 'node_modules/jqvmap/dist/maps/jquery.vmap.world.js' %}"></script>
+    <!-- <script src="{% static 'node_modules/jqvmap/dist/jquery.vmap.min.js' %}"></script> -->
+    <!-- <script src="{% static 'node_modules/jqvmap/dist/maps/jquery.vmap.world.js' %}"></script> -->
     <!-- <script src="{% static 'node_modules/jqvmap/examples/js/jquery.vmap.sampledata.js' %}"></script> -->
     <script src="{% static 'node_modules/highcharts/highcharts.src.js' %}"></script>
 
@@ -124,6 +128,7 @@
             success: (data, textStatus, jqXHR) => {
                 const values = data.map(item => item.total);
                 const labels = data.map(item => item.country);
+                labels.sort().forEach(label => $('#select-region').append($("<option>").text(label).val(label)));
                 getPieChart(values, labels);
             },
         });
@@ -144,29 +149,45 @@
             },
         });
 
-        $('#map').vectorMap({
-            map: 'world_en',
-            backgroundcolor: '#ffffff',
-            color: '#ffffff',
-            hoverOpacity: 0.7,
-            selectedColor: '#ffaaaa',
-            enableZoom: false,
-            showTooltip: true,
-            values: {},
-            scaleColors: ['#C8EEFF', '#006491'],
-            normalizeFunction: 'polynomial',
-            onLabelShow: (e, el, code) => e.preventDefault(),
-            onRegionLabelShow: (e, el, code) => e.preventDefault(),
-            onRegionClick: (element, code, region) => {
-                const selectedCountry = window.participantGenrePerCountry.find(value => value.country.toUpperCase() === region.toUpperCase());
-                const genderByCountry = selectedCountry ? {
-                    'F': selectedCountry.attendance_females || 0,
-                    'M': selectedCountry.attendance_males || 0,
-                    'X': selectedCountry.attendance_not_specified || 0
-                } : {'F': 0, 'M': 0, 'X': 0};
-                getDonutChart(`${region} - ${code.toUpperCase()}`, [genderByCountry['F'], genderByCountry['M'], genderByCountry['X']], ['Female', 'Male', 'Not specified']);
-            },
+        const onRegionClick = (element, code, region) => {
+            const selectedCountry = window.participantGenrePerCountry.find(value => value.country.toUpperCase() === region.toUpperCase());
+            const genderByCountry = selectedCountry ? {
+                'F': selectedCountry.attendance_females || 0,
+                'M': selectedCountry.attendance_males || 0,
+                'X': selectedCountry.attendance_not_specified || 0
+            } : {'F': 0, 'M': 0, 'X': 0};
+            let title = region;
+            if (code) title += `- ${code.toUpperCase()}`;
+            getDonutChart(title, [genderByCountry['F'], genderByCountry['M'], genderByCountry['X']], ['Female', 'Male', 'Not specified']);
+        }
+
+        $('#select-region').on('change', function() {
+            onRegionClick(null, null, this.value);
         });
+
+        // $('#map').vectorMap({
+        //     map: 'world_en',
+        //     backgroundcolor: '#ffffff',
+        //     color: '#ffffff',
+        //     hoverOpacity: 0.7,
+        //     selectedColor: '#ffaaaa',
+        //     enableZoom: false,
+        //     showTooltip: true,
+        //     values: {},
+        //     scaleColors: ['#C8EEFF', '#006491'],
+        //     normalizeFunction: 'polynomial',
+        //     onLabelShow: (e, el, code) => e.preventDefault(),
+        //     onRegionLabelShow: (e, el, code) => e.preventDefault(),
+        //     onRegionClick: (element, code, region) => {
+        //         const selectedCountry = window.participantGenrePerCountry.find(value => value.country.toUpperCase() === region.toUpperCase());
+        //         const genderByCountry = selectedCountry ? {
+        //             'F': selectedCountry.attendance_females || 0,
+        //             'M': selectedCountry.attendance_males || 0,
+        //             'X': selectedCountry.attendance_not_specified || 0
+        //         } : {'F': 0, 'M': 0, 'X': 0};
+        //         getDonutChart(`${region} - ${code.toUpperCase()}`, [genderByCountry['F'], genderByCountry['M'], genderByCountry['X']], ['Female', 'Male', 'Not specified']);
+        //     },
+        // });
 
     </script>
 
