@@ -3,30 +3,30 @@
 {% block content %}
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
+<style>
+    #pie-chart-area, #donut-chart-area {
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        margin-bottom: 1rem;
+    }
+</style>
+
 <h1>GeoSpatial Charts</h1>
 
-<!-- <div id="mapdiv" style="display: inline;">
-    <svg id="map" width="100%" height="400"></svg>
-</div> -->
-
-<select id="select-region" class="form-control">
-    <option value="">Select a region</option>
-</select>
-
-<div style="text-align: center; margin-top: 1rem;">
-    <div id="charts" class="row">
-        <div id="chart1" class="col-6">
-            <div id="pie-chart-area"></div>
-        </div>
-        <div id="chart2" class="col-6">
-            <div id="donut-chart-area"></div>
-        </div>
+<div id="charts" class="row">
+    <div class="col-lg-6">
+        <div class="form-control" style="border: none; background-color: transparent; margin-bottom: 1rem;"></div>
+        <div id="pie-chart-area"></div>
+    </div>
+    <div class="col-lg-6">
+        <select id="select-region" class="form-control" style="margin-bottom: 1rem;">
+            <option value="">Select a region</option>
+        </select>
+        <div id="donut-chart-area"></div>
     </div>
 </div>
 
-    <!-- <script src="{% static 'node_modules/jqvmap/dist/jquery.vmap.min.js' %}"></script> -->
-    <!-- <script src="{% static 'node_modules/jqvmap/dist/maps/jquery.vmap.world.js' %}"></script> -->
-    <!-- <script src="{% static 'node_modules/jqvmap/examples/js/jquery.vmap.sampledata.js' %}"></script> -->
+
     <script src="{% static 'node_modules/highcharts/highcharts.src.js' %}"></script>
 
     <script>
@@ -53,7 +53,8 @@
                 },
                 plotOptions: {
                     pie: {
-                        allowPointSelect: true,
+                        allowPointSelect: false,
+                        size: 200,
                         cursor: 'pointer',
                         dataLabels: {
                             enabled: true,
@@ -143,7 +144,6 @@
                     return accumulator;
                 }, {});
                 window.participantGenderPerCountry = participantGenderPerCountry;
-                // Object.keys(window.participantGenderPerCountry).sort().forEach(value => $('#select-region').append($("<option>").text(value).val(value)));
                 window.participantGenderWorld = data.reduce((accumulator, value, index, array) => {
                     accumulator['F'] += value[1] || 0;
                     accumulator['M'] += value[2] || 0;
@@ -173,30 +173,6 @@
         $('#select-region').on('change', function() {
             onRegionClick(null, null, this.value);
         });
-
-        // $('#map').vectorMap({
-        //     map: 'world_en',
-        //     backgroundcolor: '#ffffff',
-        //     color: '#ffffff',
-        //     hoverOpacity: 0.7,
-        //     selectedColor: '#ffaaaa',
-        //     enableZoom: false,
-        //     showTooltip: true,
-        //     values: {},
-        //     scaleColors: ['#C8EEFF', '#006491'],
-        //     normalizeFunction: 'polynomial',
-        //     onLabelShow: (e, el, code) => e.preventDefault(),
-        //     onRegionLabelShow: (e, el, code) => e.preventDefault(),
-        //     onRegionClick: (element, code, region) => {
-        //         const selectedCountry = window.participantGenrePerCountry.find(value => value.country.toUpperCase() === region.toUpperCase());
-        //         const genderByCountry = selectedCountry ? {
-        //             'F': selectedCountry.attendance_females || 0,
-        //             'M': selectedCountry.attendance_males || 0,
-        //             'X': selectedCountry.attendance_not_specified || 0
-        //         } : {'F': 0, 'M': 0, 'X': 0};
-        //         getDonutChart(`${region} - ${code.toUpperCase()}`, [genderByCountry['F'], genderByCountry['M'], genderByCountry['X']], ['Female', 'Male', 'Not specified']);
-        //     },
-        // });
 
     </script>
 
