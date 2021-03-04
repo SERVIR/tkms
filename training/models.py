@@ -108,7 +108,7 @@ class Participantorganization(models.Model):
 		(7, "Private Sector (Non-Profit)/Voluntary/NGO"),
 		(8, "Research Institution"),
 		(9, "State/Provincial Government"),
-		(10, "Tribal Entity"),
+		(10, "Indigenous Peoples Organization"),
 		(11, "Miscellaneous/Other")
 	)
 	name = models.CharField(max_length=200)
