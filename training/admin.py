@@ -187,6 +187,11 @@ class TrainingAdmin(admin.ModelAdmin):
                 presurveycompleted = True if df['Presurveycompleted'] == "TRUE" else False
                 postsurveycompleted = True if df['Postsurveycompleted'] == "TRUE" else False
 
+                participantorganization, created = Participantorganization.objects.get_or_create(
+                    name=df['Organization'],
+                    country = df['Country']
+                )
+                training.participantorganizations.add(participantorganization)
                 participant, created = Participant.objects.get_or_create(
                     organization=Participantorganization.objects.filter(
                         name=df['Organization'])[0],
@@ -197,12 +202,7 @@ class TrainingAdmin(admin.ModelAdmin):
                         postsurveycompleted=postsurveycompleted,
                         usparticipantstate=df['Usparticipantstate']
                 )
-                participantorganization, created = Participantorganization.objects.get_or_create(
-                    name=df['Organization'],
-                    country = df['Country']
-                )
                 training.participants.add(participant)
-                training.participantorganizations.add(participantorganization)
 
             training.attendanceFemales = attendance.get("F", 0)
             training.attendanceMales = attendance.get("M", 0)
