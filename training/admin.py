@@ -199,9 +199,6 @@ class TrainingAdmin(admin.ModelAdmin):
                 )
                 participantorganization, created = Participantorganization.objects.get_or_create(
                     name=df['Organization'],
-                    organizationtype = "0",
-                    acronym = df['Organization'][0:10],
-                    url = "",
                     country = df['Country']
                 )
                 training.participants.add(participant)

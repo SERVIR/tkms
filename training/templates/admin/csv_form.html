@@ -6,21 +6,30 @@
 
 {% block content %}
     <div>
-        <p>
-            Load your csv here, the participants will be created and added to
-            the training. You will not see this change in the form right now, but
-            after finishing the editing and refreshing the change will be shown.
-        </p>
-        <p style="color: red;">
-            Warning: Please make sure to save your edits to the form before uploading a CSV.
-        </p>
-        <p>
-            Download<a href="{% static 'training/TKMS_participants_Sample.csv' %}"> sample</a> file.
-        </p>
+      <h3 style="color: red;">
+        Make sure to save your edits to the form before uploading a CSV.
+      </h3>
+      <p>Download a sample file <a href="{% static 'training/TKMS_participants_Sample.csv' %}"><b>here</b></a></p>
+      <p>
+        Please note that existing participants will be removed and replaced with the contents in your CSV.
+        You will see the changes reflected in the form after the data has been successfully uploaded.<br/>
+        The CSV must contain the following elements
+        <ul>
+          <li>A heading row, with the names of the columns</li>
+          <li><b>Organization</b>: Full name of the organization, if the name doesn't match an existing organization, a new one will be created</li>
+          <li><b>Role</b>: Role of the participants within the organization as indicated in their registration. <b>This field can be left blank</b></li>
+          <li><b>Gender</b>: Enter <b>F</b> for Female, <b>M</b> for Male, or leave blank if not specified</li>
+          <li><b>Country</b>: Country that the participants identified in their registration (usually their country of residence)</li>
+          <li><b>Presurveycompleted</b>, <b>Postsurveycompleted</b>: Enter <<b>1</b> to confirm the corresponding survey was filled out. <b>These fields can be left blank</b></li>
+          <li><b>Usparticipantstate</b>: State the participant resides in, if the participant is located in the USA. <b>This field can be left blank</b></li>
+        </ul>
+    </p>
         <form action="." method="POST" enctype="multipart/form-data">
             {{ form.as_p }}
             {% csrf_token %}
-            <button type="submit">Upload CSV</button>
+            <div class="submit-row">
+              <input type="submit" id="upload-csv" value="Upload CSV File">
+            </div>
         </form>
     </div>
     <br />

@@ -113,7 +113,7 @@ class Participantorganization(models.Model):
 	)
 	name = models.CharField(max_length=200)
 	organizationtype = models.IntegerField(choices=ORGANIZATION_TYPE_CHOICES, default=0, help_text="Organization Type")
-	acronym = models.CharField(max_length=50, blank=True)
+	acronym = models.CharField(max_length=50, blank=True, default="-- NOT SPECIFIED --")
 	url = models.URLField(blank=True, help_text="Organization Site")
 	country = models.CharField(max_length=100, help_text="Primary location (HQ)")
 	class Meta:
@@ -240,7 +240,7 @@ class Training(models.Model):
 	keywords = models.ManyToManyField(Keyword, blank=True)
 	resources = models.ManyToManyField('Resource', blank=True)
 	participantorganizations = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainees)", blank=True)
-	trainingorganization = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainers)", related_name="training_orgs")
+	trainingorganization = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainers)", related_name="training_orgs", blank=True)
 	participants = models.ManyToManyField(Participant, blank=True)
 	trainers = models.ManyToManyField(Trainer, blank=True)
 
