@@ -4,6 +4,7 @@ from training.models import Keyword, Resource, Participantorganization, Particip
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import action
 from rest_framework import status
+from django.db import connection
 from django.db.models import Count, Sum
 from django.core import serializers
 
@@ -158,11 +159,28 @@ class PartecipantViewSet(viewsets.ModelViewSet):
 
 	@action(methods=['get'], detail=True)
 	def get_participant_gender_per_country(self, request, pk=None):
-		qs = Training.objects.values('country').annotate(
-			total=Sum('attendanceMales') + Sum('attendanceFemales') + Sum('attendanceNotSpecified'),
-			attendance_males=Sum('attendanceMales'),
-			attendance_females=Sum('attendanceFemales'),
-			attendance_not_specified=Sum('attendanceNotSpecified')
-		).order_by('total')
-		qs_json = json.dumps(list(qs))
+		with connection.cursor() as cursor:
+			cursor.execute("SELECT\
+				country,\
+				SUM(CASE WHEN genderFemale = 0 THEN attendanceFemales ELSE genderFemale END) AS attendanceFemales,\
+				SUM(CASE WHEN genderMale = 0 THEN attendanceMales ELSE genderMale END) AS attendanceMales,\
+				SUM(CASE WHEN genderNotSpecified = 0 THEN attendanceNotSpecified ELSE genderNotSpecified END) AS attendanceNotSpecified\
+				FROM (SELECT\
+					t.country AS country,\
+					t.name,\
+					SUM(CASE WHEN p.gender = 'F' THEN 1 ELSE 0 END) AS genderFemale,\
+					SUM(CASE WHEN p.gender = 'M' THEN 1 ELSE 0 END) AS genderMale,\
+					SUM(CASE WHEN p.gender NOT IN ('F', 'M') THEN 1 ELSE 0 END) AS genderNotSpecified,\
+					IFNULL(t.attendanceFemales, 0) AS attendanceFemales,\
+					IFNULL(t.attendanceMales, 0) AS attendanceMales,\
+					IFNULL(t.attendanceNotSpecified, 0) AS attendanceNotSpecified\
+					FROM training_training AS t\
+					LEFT JOIN training_training_participants AS tp ON tp.training_id = t.id\
+					LEFT JOIN training_participant AS p ON p.id = tp.participant_id\
+					GROUP BY t.id)\
+				WHERE 1=1\
+				GROUP BY country\
+				ORDER BY country")
+			rows = cursor.fetchall()
+		qs_json = json.dumps(rows)
 		return HttpResponse(qs_json, content_type='application/json')

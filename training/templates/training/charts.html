@@ -128,7 +128,6 @@
             success: (data, textStatus, jqXHR) => {
                 const values = data.map(item => item.total);
                 const labels = data.map(item => item.country);
-                labels.sort().forEach(label => $('#select-region').append($("<option>").text(label).val(label)));
                 getPieChart(values, labels);
             },
         });
@@ -138,28 +137,38 @@
             dataType: "json",
             url: '/training/get_participant_gender_per_country',
             success: (data, textStatus, jqXHR) => {
-                window.participantGenrePerCountry = data;
-                const genderTotal = window.participantGenrePerCountry.reduce((accumulator, currentValue, currentIndex, array) => {
-                    accumulator['F'] += currentValue.attendance_females || 0;
-                    accumulator['M'] += currentValue.attendance_males || 0;
-                    accumulator['X'] += currentValue.attendance_not_specified || 0;
+                const participantGenderPerCountry = data.reduce((accumulator, value, index, array) => {
+                    $('#select-region').append($("<option>").text(value[0]).val(value[0]));
+                    accumulator[value[0]] = value;
+                    return accumulator;
+                }, {});
+                window.participantGenderPerCountry = participantGenderPerCountry;
+                // Object.keys(window.participantGenderPerCountry).sort().forEach(value => $('#select-region').append($("<option>").text(value).val(value)));
+                window.participantGenderWorld = data.reduce((accumulator, value, index, array) => {
+                    accumulator['F'] += value[1] || 0;
+                    accumulator['M'] += value[2] || 0;
+                    accumulator['X'] += value[3] || 0;
                     return accumulator;
                 }, {'F': 0, 'M': 0, 'X': 0});
-                getDonutChart('World', [genderTotal['F'], genderTotal['M'], genderTotal['X']], ['Female', 'Male', 'Not specified']);
+                getDonutChart('World', [window.participantGenderWorld['F'], window.participantGenderWorld['M'], window.participantGenderWorld['X']], ['Female', 'Male', 'Not specified']);
             },
         });
 
         const onRegionClick = (element, code, region) => {
-            const selectedCountry = window.participantGenrePerCountry.find(value => value.country.toUpperCase() === region.toUpperCase());
-            const genderByCountry = selectedCountry ? {
-                'F': selectedCountry.attendance_females || 0,
-                'M': selectedCountry.attendance_males || 0,
-                'X': selectedCountry.attendance_not_specified || 0
-            } : {'F': 0, 'M': 0, 'X': 0};
-            let title = region;
-            if (code) title += `- ${code.toUpperCase()}`;
-            getDonutChart(title, [genderByCountry['F'], genderByCountry['M'], genderByCountry['X']], ['Female', 'Male', 'Not specified']);
-        }
+            if (region === '') {
+                getDonutChart('World', [window.participantGenderWorld['F'], window.participantGenderWorld['M'], window.participantGenderWorld['X']], ['Female', 'Male', 'Not specified']);
+            } else {
+                const value = window.participantGenderPerCountry[region];
+                const genderByCountry = {
+                    'F': value[1] || 0,
+                    'M': value[2] || 0,
+                    'X': value[3] || 0
+                };
+                let title = region;
+                if (code) title += `- ${code.toUpperCase()}`;
+                getDonutChart(title, [genderByCountry['F'], genderByCountry['M'], genderByCountry['X']], ['Female', 'Male', 'Not specified']);
+            }
+        };
 
         $('#select-region').on('change', function() {
             onRegionClick(null, null, this.value);
