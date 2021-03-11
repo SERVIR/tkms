@@ -79,7 +79,8 @@ def resources(request):
 	asc_des = 'true' if asc_des == 'false' else 'false'
 
 	for r in resource_records:
-		if Training.objects.filter(resource=r.id).count() > 0:
+		trainings = Training.objects.filter(resource=r.id)
+		if trainings.count() > 0:
 			r.t = Training.objects.filter(resource=r.id)[0]
 
 	content = {

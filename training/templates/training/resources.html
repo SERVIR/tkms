@@ -11,6 +11,24 @@
   <thead class="thead-dark">
     <th scope="col"></th>
     <th scope="col">
+      <a href="?order_by=resourcetype&asc_des={{ asc_des }}">
+        Resource<br />Type
+        {% if order_by == 'resourcetype' %}
+          {% if asc_des == 'true' %}
+            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
+          {% else %}
+            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
+          {% endif %}
+        {% endif %}
+      </a>
+    </th>
+    <th scope="col">
+      Training
+    </th>
+    <th scope="col">
+      Language
+    </th>
+    <th scope="col">
       <a href="?order_by=name&asc_des={{ asc_des }}">
         Title
         {% if order_by == 'name' %}
@@ -34,29 +52,20 @@
         {% endif %}
       </a>
     </th>
-    <th scope="col">
-      <a href="?order_by=resourcetype&asc_des={{ asc_des }}">
-        Resource<br />Type
-        {% if order_by == 'resourcetype' %}
-          {% if asc_des == 'true' %}
-            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
-          {% else %}
-            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
-          {% endif %}
-        {% endif %}
-      </a>
-    </th>
-    <th scope="col">
-      Training
-    </th>
   </thead>
   {% for rec in resource_records %}
   <tr>
     <td><a class="badge badge-danger" href="/admin/training/resource/{{ rec.id }}/change/">Edit</a></td>
-    <td><a href="{{ rec.location }}">{{ rec.name }}</a></td>
-    <td>{{ rec.author }}</td>
     <td>{{ rec.resourcetype_verbose }}</td>
-    <td>{{ rec.t }}</td>
+    <td>{{ rec.t.name }}</td>
+    <td>{{ rec.t.language }}</td>
+    <td>
+      <a href="{{ rec.location }}">{{ rec.name }}</a>
+      {% if rec.internaluse %}
+        <span class="badge badge-danger">Internal Use</span>
+      {% endif %}
+    </td>
+    <td>{{ rec.author }}</td>
   </tr>
   {% endfor %}
 </table>
