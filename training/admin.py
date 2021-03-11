@@ -108,7 +108,7 @@ class TrainingAdmin(admin.ModelAdmin):
     """
     object_id = None
     list_display = ('starts', 'name', 'country', 'hub', 'get_attendanceMale', 'get_attendanceFemale', 'get_attendanceNotSpecified')
-    list_filter = ('serviceareas', 'hub', 'recordstatus', 'country')
+    list_filter = ('serviceareas', 'hub', 'recordstatus', 'country', 'language')
     filter_horizontal = ('serviceareas', 'services', 'keywords', 'resources', 'dataSource', 'participantorganizations', 'participants', 'trainingorganization', 'trainers')
 
     def get_attendanceFemale(self, obj):
