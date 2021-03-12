@@ -60,10 +60,10 @@
     <td>{{ rec.t.name }}</td>
     <td>{{ rec.t.language }}</td>
     <td>
-      <a href="{{ rec.location }}">{{ rec.name }}</a>
       {% if rec.internaluse %}
-        <span class="badge badge-danger">Internal Use</span>
+        <span class="badge badge-warning">Internal Use</span>
       {% endif %}
+      <a href="{{ rec.location }}">{{ rec.name }}</a>
     </td>
     <td>{{ rec.author }}</td>
   </tr>
