@@ -139,3 +139,5 @@ LOGIN_URL = '/accounts/login/'
 LOGIN_REDIRECT_URL = '/'
 
 LOGOUT_REDIRECT_URL = '/'
+
+DEFAULT_AUTO_FIELD='django.db.models.AutoField'

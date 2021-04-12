@@ -14,6 +14,9 @@ source $VENV_PATH/bin/activate
 # get last version from git
 git -C $BASE_PATH pull
 
+# install python dependencies
+pip install -r requirements.txt
+
 # install javascript dependencies
 npm install --prefix "$BASE_PATH/training/static/"
 
