@@ -6,7 +6,6 @@ from rest_framework.decorators import action
 from rest_framework import status
 from django.db import connection
 from django.db.models import Count, Sum
-from django.core import serializers
 
 # Create your views here.
 def index(request):
@@ -168,7 +167,6 @@ class PartecipantViewSet(viewsets.ModelViewSet):
 				SUM(CASE WHEN genderNotSpecified = 0 THEN attendanceNotSpecified ELSE genderNotSpecified END) AS attendanceNotSpecified\
 				FROM (SELECT\
 					t.country AS country,\
-					t.name,\
 					SUM(CASE WHEN p.gender = 'F' THEN 1 ELSE 0 END) AS genderFemale,\
 					SUM(CASE WHEN p.gender = 'M' THEN 1 ELSE 0 END) AS genderMale,\
 					SUM(CASE WHEN p.gender NOT IN ('F', 'M') THEN 1 ELSE 0 END) AS genderNotSpecified,\
