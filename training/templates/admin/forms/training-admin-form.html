@@ -1,25 +1,29 @@
 {% extends 'admin/change_form.html' %}
 
+{% load user_tags %}
+
 {% block submit_buttons_bottom %}
     {{ block.super }}
-    <div class="submit-row">
-        <input type="submit" id="upload-csv" value="Upload Paticipants CSV" />
-    </div>
-    <script language="javascript" type="text/javascript">
-        if (typeof window.popitup === 'undefined') {
-            function popitup(url) {
-                const screenWidth = screen.availWidth;
-                const screenHeight = screen.availHeight;
-                const popupWidth = parseInt(screenWidth * 0.5);
-                const popupHeight = parseInt(screenHeight * 0.5);
-                const newWindow = window.open(url,"Upload CSV",`height=${popupHeight},width=${popupWidth},resizable=1`);
-                if (window.focus) newWindow.focus();
-                return false;
+    {% if perms.app_label.can_upload_csv %}
+        <div class="submit-row">
+            <input type="submit" id="upload-csv" value="Upload Paticipants CSV" />
+        </div>
+        <script language="javascript" type="text/javascript">
+            if (typeof window.popitup === 'undefined') {
+                function popitup(url) {
+                    const screenWidth = screen.availWidth;
+                    const screenHeight = screen.availHeight;
+                    const popupWidth = parseInt(screenWidth * 0.5);
+                    const popupHeight = parseInt(screenHeight * 0.5);
+                    const newWindow = window.open(url,"Upload CSV",`height=${popupHeight},width=${popupWidth},resizable=1`);
+                    if (window.focus) newWindow.focus();
+                    return false;
+                }
             }
-        }
-        document.getElementById('upload-csv').onclick = function(event) {
-            event.preventDefault();
-            return popitup('../../import-csv');
-        };
-    </script>
+            document.getElementById('upload-csv').onclick = function(event) {
+                event.preventDefault();
+                return popitup('../../import-csv');
+            };
+        </script>
+    {% endif %}
 {% endblock %}

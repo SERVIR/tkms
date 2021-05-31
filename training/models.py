@@ -272,6 +272,11 @@ class Training(models.Model):
 	def lead_verbose(self):
 		return dict(Training.LEAD_CHOICES)[self.lead]
 
+	class Meta:
+		permissions = [
+			("can_upload_csv", "Can upload CSV")
+		]
+
 class Resource(models.Model):
 	RESOURCE_TYPE_CHOICES = (
 		(1, "Training Agenda"),
