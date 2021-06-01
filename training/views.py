@@ -1,11 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-from training.models import Keyword, Resource, Participantorganization, Participant, Trainer, Training
+from training.models import Keyword, Resource, Participantorganization, Participant, Trainer, Training, Hub
 from django.contrib.auth.decorators import login_required
 from rest_framework.decorators import action
 from rest_framework import status
 from django.db import connection
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, Min, Max
+import io, csv
 
 # Create your views here.
 def index(request):
@@ -44,6 +45,13 @@ def events(request):
 	}
 
 	return render(request, "training/events.html", context=content)
+
+def events_export(request):
+	hubs = list(map(lambda x: (x['id'], x['hub_short_name']), Hub.objects.all().values()))
+	starts = Training.objects.aggregate(Min('starts'))['starts__min'].isoformat()
+	ends = Training.objects.aggregate(Max('ends'))['ends__max'].isoformat()
+	content = {'hubs': hubs, 'starts': starts, 'ends': ends}
+	return render(request, "training/events_export.html", context=content)
 
 @login_required
 def event_detail(request, eventid):
@@ -135,6 +143,26 @@ def about(request):
 
 def charts(request):
 	return render(request, "training/charts.html",context={})
+
+def download_events(request):
+	start_date = request.POST.get("startDate", "")
+	end_date = request.POST.get("endDate", "")
+	hub = request.POST.get("hub", "")
+	qs = Training.objects.all()
+	if start_date != "":
+		qs = qs.filter(starts__gte=start_date)
+	if end_date != "":
+		qs = qs.filter(starts__lte=end_date)
+	if hub != "":
+		qs = qs.filter(hub__id=hub)
+	csv_file = io.StringIO()
+	csv_writer = csv.writer(csv_file)
+	csv_writer.writerow(["name", "starts", "ends", "hub"])
+	for row in qs:
+		csv_writer.writerow([row.name, row.starts, row.ends, row.hub])
+	response = HttpResponse(csv_file.getvalue(), content_type="text/csv,charset=utf8")
+	response["Content-Disposition"] = "attachment; filename={}".format("events.csv")
+	return response
 
 ### API for TrainingSerializer
 

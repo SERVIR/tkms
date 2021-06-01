@@ -3,7 +3,9 @@
 {% block content %}
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
-<h1>Training Events</h1>
+<h1 style="display: inline-block;">Training Events</h1>
+<a class="nav-link" href="/training/events_export" style="float: right;">Export Events</a>
+
 <img class="img-fluid rounded" src="{% static 'training/events.jpg' %}">
 
 <script type="text/javascript">

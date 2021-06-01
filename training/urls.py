@@ -13,6 +13,7 @@ urlpatterns = [
     # Content Items
     path("", views.about, name="about"),
     path("events", views.events, name="events"),
+    path("events_export", views.events_export, name="events_export"),
     path("event/<int:eventid>", views.event_detail, name="event_detail"),
     path("resources", views.resources, name="resources"),
     path("organizations", views.organizations, name="organizations"),
@@ -26,6 +27,7 @@ urlpatterns = [
     # API
     path('get_training_per_country', views.TrainingViewSet.as_view({'get': 'get_training_per_country'})),
     path('get_participant_gender_per_country', views.PartecipantViewSet.as_view({'get': 'get_participant_gender_per_country'})),
+    path('download_events', views.download_events),
     # REST API patterns
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),

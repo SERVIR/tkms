@@ -1,0 +1,53 @@
+{% extends "training/base.html" %}
+{% load static %}
+{% block content %}
+
+<h1>Events Export</h1>
+
+<form action="/training/download_events" method="post">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label>Start date</label>
+                <input
+                    type="date"
+                    class="form-control"
+                    name="startDate"
+                    min="{{ starts }}"
+                    max="{{ ends }}"
+                />
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label>End date</label>
+                <input
+                    type="date"
+                    class="form-control"
+                    name="endDate"
+                    min="{{ starts }}"
+                    max="{{ ends }}"
+                />
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label>Hub</label>
+                <select class="form-control" name="hub">
+                    <option value="" selected>All</option>
+                    {% for value, name in hubs %}
+                        <option value="{{ value }}">{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <button type="submit" class="btn btn-primary">Export CSV</button>
+        </div>
+    </div>
+</form>
+
+{% endblock %}
