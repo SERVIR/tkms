@@ -148,6 +148,8 @@ def download_events(request):
 	start_date = request.POST.get("startDate", "")
 	end_date = request.POST.get("endDate", "")
 	hub = request.POST.get("hub", "")
+	csv_file = io.StringIO()
+	csv_writer = csv.writer(csv_file)
 	qs = Training.objects.all()
 	if start_date != "":
 		qs = qs.filter(starts__gte=start_date)
@@ -155,11 +157,16 @@ def download_events(request):
 		qs = qs.filter(starts__lte=end_date)
 	if hub != "":
 		qs = qs.filter(hub__id=hub)
-	csv_file = io.StringIO()
-	csv_writer = csv.writer(csv_file)
-	csv_writer.writerow(["name", "starts", "ends", "hub"])
-	for row in qs:
-		csv_writer.writerow([row.name, row.starts, row.ends, row.hub])
+	submit_type = request.POST.get("submitType", "")
+	if submit_type == "events":
+		csv_writer.writerow(["name", "starts", "ends", "hub"])
+		for row in qs:
+			csv_writer.writerow([row.name, row.starts, row.ends, row.hub])
+	elif submit_type == "participants":
+		csv_writer.writerow(["organization", "country", "hub"])
+		for row in qs:
+			for participant in row.participants.all():
+				csv_writer.writerow([participant.organization.name, participant.country, row.hub])
 	response = HttpResponse(csv_file.getvalue(), content_type="text/csv,charset=utf8")
 	response["Content-Disposition"] = "attachment; filename={}".format("events.csv")
 	return response
