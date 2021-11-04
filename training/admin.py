@@ -223,8 +223,17 @@ class ResourceAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('id', 'name', 'author', 'added', 'resourcetype', 'hub', 'internaluse')
-    list_filter = ('hub', 'internaluse', 'resourcetype', 'license', 'author', 'added')
+    list_display = ('id', 'name', 'author', 'added', 'resourcetype', 'hub', 'internaluse', 'backedup')
+    list_filter = ('hub', 'internaluse', 'backedup', 'resourcetype', 'license', 'author', 'added')
     filter_horizontal = ("trainings",)
     search_fields = ("name", "author",)
     date_hierarchy = "added"
+    fieldsets = (
+        (None, {'fields':('name', 'resourcetype', 'location', 'added', 'hub', 'internaluse', 'author', 'abstract', 'keywords', 'license')}),
+        ("Backup Status", {
+            'classes': ('collapse',),
+            'fields':('backedup', 'backuplocation', )}),
+        ("List of Trainings Using the Resource", {
+            'classes': ('collapse',),
+            'fields':('trainings',)}),
+    )
