@@ -24,41 +24,23 @@ from .models import Service
 from .models import Hub
 from .models import DataSource
 
-# admin.site.register(Organization)
 admin.site.register(Hub)
-# admin.site.register(Training)
-# admin.site.register(Resource)
-# admin.site.register(Participantorganization)
-# admin.site.register(Participant)
-# admin.site.register(Trainer)
 admin.site.register(Keyword)
 admin.site.register(Servicearea)
 
 admin.site.site_header = "SERVIR Training Knowledge Management System - Administration"
 
-"""
-Pending: Implementation of Fieldsets for complex models
-example:
-
-    fieldsets = (
-        (None, {
-            'fields': ('book', 'imprint', 'id')
-        }),
-        ('Availability', {
-            'fields': ('status', 'due_back', 'borrower')
-        }),
-    )
-
-"""
 @admin.register(DataSource)
 class DataSourceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'dataType', 'accessType')
+    list_display = ('id', 'name', 'dataType', 'accessType')
     list_filter = ('accessType','dataType',)
+    search_fields = ('name', 'id')
 
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'serviceCatalogID', 'servicearea')
+    list_display = ('id', 'name', 'serviceCatalogID', 'servicearea')
     list_filter = ('servicearea',)
+    search_fields = ('name', 'id')
 
 @admin.register(Participantorganization)
 class ParticipantorganizationAdmin(admin.ModelAdmin):
@@ -67,9 +49,10 @@ class ParticipantorganizationAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('name', 'acronym', 'organizationtype', 'country')
-    list_filter = ('country', 'organizationtype')
+    list_display = ('id', 'name', 'acronym', 'organizationtype', 'country')
+    list_filter = ('organizationtype', 'country')
     #filter_horizontal = ("trainings",)
+    search_fields = ('name', 'acronym', 'country', 'id')
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
@@ -78,9 +61,10 @@ class ParticipantAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('role', 'organization', 'gender','country')
+    list_display = ('id', 'role', 'organization', 'gender','country')
     list_filter = ('country', 'organization')
     #filter_horizontal = ("trainings",)
+    search_fields = ('role', 'organization__name', 'country', 'id')
 
 @admin.register(Trainer)
 class TrainerAdmin(admin.ModelAdmin):
@@ -89,8 +73,9 @@ class TrainerAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('name','organization','role','gender')
-    list_filter = ('role', 'organization')
+    list_display = ('id', 'name', 'role', 'gender', 'organization',)
+    list_filter = ('gender', 'organization', 'role', )
+    search_fields = ('name', 'organization__name', 'role', 'id')
 
 # class ResourcesInline(admin.TabularInline):
 #     """Defines format for insertion of resources"""
@@ -107,9 +92,11 @@ class TrainingAdmin(admin.ModelAdmin):
     - filters that will be displayed in sidebar (list_filter)
     """
     object_id = None
-    list_display = ('starts', 'name', 'country', 'hub', 'get_attendanceMale', 'get_attendanceFemale', 'get_attendanceNotSpecified')
+    list_display = ('id', 'starts', 'name', 'country', 'hub', 'get_attendanceMale', 'get_attendanceFemale', 'get_attendanceNotSpecified')
     list_filter = ('serviceareas', 'hub', 'recordstatus', 'country', 'language')
     filter_horizontal = ('serviceareas', 'services', 'keywords', 'resources', 'dataSource', 'participantorganizations', 'participants', 'trainingorganization', 'trainers')
+    date_hierarchy = "starts"
+    search_fields = ("name", "country", "serviceareas__name", "expectedoutcome", "description", "trainingorganization__name", "id")
 
     def get_attendanceFemale(self, obj):
         return obj.attendanceFemales
@@ -236,6 +223,8 @@ class ResourceAdmin(admin.ModelAdmin):
     - fields to be displayed in list view (list_display)
     - filters that will be displayed in sidebar (list_filter)
     """
-    list_display = ('name', 'author', 'added', 'resourcetype', 'hub', 'internaluse')
-    list_filter = ('hub', 'internaluse', 'resourcetype', 'author', 'added')
+    list_display = ('id', 'name', 'author', 'added', 'resourcetype', 'hub', 'internaluse')
+    list_filter = ('hub', 'internaluse', 'resourcetype', 'license', 'author', 'added')
     filter_horizontal = ("trainings",)
+    search_fields = ("name", "author",)
+    date_hierarchy = "added"

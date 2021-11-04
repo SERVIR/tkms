@@ -2,14 +2,14 @@
 {% load static %}
 {% block content %}
 
-<h1>Events Export</h1>
+<h1>Export Events and Participation Data</h1>
 
 <form action="/training/download_events" method="post">
     {% csrf_token %}
     <div class="row">
         <div class="col">
             <div class="form-group">
-                <label>Start date</label>
+                <label>From</label>
                 <input
                     type="date"
                     class="form-control"
@@ -21,7 +21,7 @@
         </div>
         <div class="col">
             <div class="form-group">
-                <label>End date</label>
+                <label>To</label>
                 <input
                     type="date"
                     class="form-control"
@@ -31,17 +31,30 @@
                 />
             </div>
         </div>
-        <div class="col">
-            <div class="form-group">
-                <label>Hub</label>
-                <select class="form-control" name="hub">
-                    <option value="" selected>All</option>
-                    {% for value, name in hubs %}
-                        <option value="{{ value }}">{{ name }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </div>
+    </div>
+    <div class="row">
+      <div class="col">
+          <div class="form-group">
+              <label>Hub</label>
+              <select class="form-control" name="hub">
+                  <option value="" selected>All</option>
+                  {% for value, name in hubs %}
+                      <option value="{{ value }}">{{ name }}</option>
+                  {% endfor %}
+              </select>
+          </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <input type="checkbox" id="withinDateRange" name="withinDateRange" value="FILTER">
+        <label for="withinDateRange">Only list trainings fully contained within the date range</label><br>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <p></p>
+      </div>
     </div>
     <div class="row">
         <div class="col">

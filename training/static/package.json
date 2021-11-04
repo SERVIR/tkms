@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "bootstrap-icons": "^1.4.0",
-    "highcharts": "^8.2.2",
+    "highcharts": "^9.2.2",
     "jquery": "^3.6.0",
     "leaflet": "^1.7.1"
   },

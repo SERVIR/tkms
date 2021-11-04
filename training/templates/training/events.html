@@ -4,7 +4,7 @@
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 <h1 style="display: inline-block;">Training Events</h1>
-<a class="nav-link" href="/training/events_export" style="float: right;">Export Events</a>
+<a class="btn btn-info" href="/training/events_export" style="float: right;">Export Events</a>
 
 <img class="img-fluid rounded" src="{% static 'training/events.jpg' %}">
 
@@ -19,7 +19,8 @@
           organization: "{{ rec.organization }}",
           format: "{{ rec.format_verbose }}",
           servicearea: "{{ rec.servicearea_verbose }}",
-          training: "{{ rec.training }}"
+          training: "{{ rec.training }}",
+          id: "{{ rec.id }}"
         }
         {% endfor %}
     ]
@@ -33,6 +34,18 @@
       <a href="?order_by=starts&asc_des={{ asc_des }}">
         Date
         {% if order_by == 'starts' %}
+          {% if asc_des == 'true' %}
+            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
+          {% else %}
+            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
+          {% endif %}
+        {% endif %}
+      </a>
+    </th>
+    <th scope="col">
+      <a href="?order_by=id&asc_des={{ asc_des }}">
+        ID
+        {% if order_by == 'id' %}
           {% if asc_des == 'true' %}
             &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
           {% else %}
@@ -106,6 +119,7 @@
   <tr>
     <td><a class="badge badge-danger" href="/admin/training/training/{{ rec.id }}/change/">Edit</a></td>
     <td>{{ rec.starts }}</td>
+    <td>{{ rec.id }}</td>
     <td><a href="/training/event/{{ rec.id }}">{{ rec.name }}</a></td>
     <td>{{ rec.country }}</td>
     <td>{{ rec.hub }}</td>

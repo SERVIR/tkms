@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework import status
 from django.db import connection
 from django.db.models import Count, Sum, Min, Max
+from datetime import date
 import io, csv
 
 # Create your views here.
@@ -145,30 +146,68 @@ def charts(request):
 	return render(request, "training/charts.html",context={})
 
 def download_events(request):
+	# Export details for events held ocurring between startDate and endDate (defined by user)
+
 	start_date = request.POST.get("startDate", "")
 	end_date = request.POST.get("endDate", "")
 	hub = request.POST.get("hub", "")
+	within_range = request.POST.get("withinDateRange","")
 	csv_file = io.StringIO()
 	csv_writer = csv.writer(csv_file)
 	qs = Training.objects.all()
-	if start_date != "":
-		qs = qs.filter(starts__gte=start_date)
-	if end_date != "":
-		qs = qs.filter(starts__lte=end_date)
+	qs = qs.order_by('starts')
+	# Exclude trainings that are marked as Test Records
+	qs = qs.exclude(recordstatus=0)
 	if hub != "":
+		# Filter by selected hub
 		qs = qs.filter(hub__id=hub)
+
+	if within_range == "FILTER":
+		# Filter trainings beginning after start_date
+		qs = qs.filter(starts__gte=start_date)
+		# Filter trainings ending before end_date
+		qs = qs.filter(ends__lte=end_date)
+	else:
+		# Exclude trainings that finish before startDate
+		qs = qs.exclude(ends__lt=start_date)
+		# Exclude trainings that start after endDate
+		qs = qs.exclude(starts__gt=end_date)
+
 	submit_type = request.POST.get("submitType", "")
+	output_file_name = ""
+	date_tag = date.today().strftime("%Y-%m-%d")
 	if submit_type == "events":
-		csv_writer.writerow(["name", "starts", "ends", "hub"])
-		for row in qs:
-			csv_writer.writerow([row.name, row.starts, row.ends, row.hub])
+		output_file_name = "tkms_export_events"
+		csv_writer.writerow(["Training ID","Title", "Hub", "Starts", "Ends", "Country", "Language", "F", "M", "X"])
+		for training in qs:
+			csv_writer.writerow([
+					training.id,
+					training.name,
+					training.hub,
+					training.starts,
+					training.ends,
+					training.country,
+					training.language,
+					training.attendanceFemales,
+					training.attendanceMales,
+					training.attendanceNotSpecified])
 	elif submit_type == "participants":
-		csv_writer.writerow(["organization", "country", "hub"])
-		for row in qs:
-			for participant in row.participants.all():
-				csv_writer.writerow([participant.organization.name, participant.country, row.hub])
+		output_file_name = "tkms_export_participants"
+		csv_writer.writerow(["Training ID", "Title", "Hub", "Starts", "Ends", "Organization", "Country", "Gender", "Role"])
+		for training in qs:
+			for participant in training.participants.all():
+				csv_writer.writerow([
+					training.id,
+					training.name,
+					training.hub,
+					training.starts,
+					training.ends,
+					participant.organization.name,
+					participant.country,
+					participant.gender,
+					participant.role])
 	response = HttpResponse(csv_file.getvalue(), content_type="text/csv,charset=utf8")
-	response["Content-Disposition"] = "attachment; filename={}".format("events.csv")
+	response["Content-Disposition"] = "attachment; filename={}".format(output_file_name + "_" + date_tag + ".csv")
 	return response
 
 ### API for TrainingSerializer

@@ -29,6 +29,18 @@
       Language
     </th>
     <th scope="col">
+      <a href="?order_by=id&asc_des={{ asc_des }}">
+        ID
+        {% if order_by == 'id' %}
+          {% if asc_des == 'true' %}
+            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
+          {% else %}
+            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
+          {% endif %}
+        {% endif %}
+      </a>
+    </th>
+    <th scope="col">
       <a href="?order_by=name&asc_des={{ asc_des }}">
         Title
         {% if order_by == 'name' %}
@@ -52,6 +64,18 @@
         {% endif %}
       </a>
     </th>
+    <th scope="col">
+      <a href="?order_by=license&asc_des={{ asc_des }}">
+        License
+        {% if order_by == 'license' %}
+          {% if asc_des == 'true' %}
+            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
+          {% else %}
+            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
+          {% endif %}
+        {% endif %}
+      </a>
+    </th>
   </thead>
   {% for rec in resource_records %}
   <tr>
@@ -59,6 +83,7 @@
     <td>{{ rec.resourcetype_verbose }}</td>
     <td>{{ rec.t.name }}</td>
     <td>{{ rec.t.language }}</td>
+    <td>{{ rec.id }}</td>
     <td>
       {% if rec.internaluse %}
         <span class="badge badge-warning">Internal Use</span>
@@ -66,6 +91,7 @@
       <a href="{{ rec.location }}">{{ rec.name }}</a>
     </td>
     <td>{{ rec.author }}</td>
+    <td>{{ rec.license }}</td>
   </tr>
   {% endfor %}
 </table>

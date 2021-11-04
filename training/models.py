@@ -295,6 +295,20 @@ class Resource(models.Model):
 		(14, "Debrief"),
 		(0, "Other")
 	)
+	LICENSE_OPTIONS = (
+		(0, 'Not Specified'),
+		(1, 'NOT LICENSED'),
+		(2, 'CC Attribution'),
+		(3, 'CC Attribution-ShareAlike'),
+		(4, 'CC Attribution-NoDerivs'),
+		(5, 'CC Attribution-NonCommercial'),
+		(6, 'CC Attribution-NonCommercial-ShareAlike'),
+		(7, 'CC Attribution-NonCommercial-NoDerivs'),
+		(8, 'MIT'),
+		(9, 'GNU GPLv3'),
+		(10, 'Unlicense'),
+		(11, 'Other'),
+	)
 	name = models.CharField(max_length=300)
 	resourcetype = models.IntegerField(choices=RESOURCE_TYPE_CHOICES, default=1, help_text="Resource Type")
 	location = models.URLField(blank=True, help_text="URL for the resource", default="https://")
@@ -307,7 +321,10 @@ class Resource(models.Model):
 	backedup = models.BooleanField(blank=True, default=False, help_text="Indicates whether the resource has been backed up")
 	backuplocation = models.URLField(blank=True, help_text="Indicates the backup location")
 	trainings = models.ManyToManyField(Training, through=Training.resources.through, help_text="Related Training Events", blank=True)
+	license = models.IntegerField(choices=LICENSE_OPTIONS, blank=True, help_text="Applicable license for the resource")
 	def __str__(self):
 		return self.added.strftime("%Y-%m-%d") + ", " + self.author + ", " + self.name
 	def resourcetype_verbose(self):
 		return dict(Resource.RESOURCE_TYPE_CHOICES)[self.resourcetype]
+	def license_verboxe(self):
+		return dict(Resource.LICENSE_OPTIONS)[self.license]
