@@ -1,4 +1,9 @@
 #! /bin/sh
+# Deploys the application to the server
+# Arguments:
+#   $0 - Deployment location
+#   $1 - Backup directory
+#   $2 - Environment name
 
 BASE_PATH="$(cd "$(dirname "$0")" && pwd -P)"
 BACKUP_DB_PATH="$1"

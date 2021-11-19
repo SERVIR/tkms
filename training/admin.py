@@ -53,6 +53,7 @@ class ParticipantorganizationAdmin(admin.ModelAdmin):
     list_filter = ('organizationtype', 'country')
     #filter_horizontal = ("trainings",)
     search_fields = ('name', 'acronym', 'country', 'id')
+    ordering = ['country','acronym','name']
 
 @admin.register(Participant)
 class ParticipantAdmin(admin.ModelAdmin):
@@ -65,6 +66,7 @@ class ParticipantAdmin(admin.ModelAdmin):
     list_filter = ('country', 'organization')
     #filter_horizontal = ("trainings",)
     search_fields = ('role', 'organization__name', 'country', 'id')
+    autocomplete_fields = ['organization']
 
 @admin.register(Trainer)
 class TrainerAdmin(admin.ModelAdmin):
