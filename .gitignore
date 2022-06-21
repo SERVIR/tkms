@@ -1,4 +1,5 @@
 *__pycache__*
+data.json
 db.sqlite3
 .idea/
 staticfiles
