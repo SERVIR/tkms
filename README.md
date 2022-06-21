@@ -176,10 +176,10 @@ For concept, content and procedures, contact Betzy Hernandez (Capacity Building 
 
 ## License and Distribution
 
-RHEASViewerV3 is distributed by SERVIR under the terms of the MIT License. See
+SERVIR Training Knowledge Management System (TKMS) is distributed by SERVIR under the terms of the MIT License. See
 [LICENSE](https://github.com/SERVIR/SAMS/blob/master/LICENSE) in this directory for more information.
 
 ## Privacy & Terms of Use
 
-RHEASViewer abides to all of SERVIR's privacy and terms of use as described
+SERVIR Training Knowledge Management System (TKMS) abides to all of SERVIR's privacy and terms of use as described
 at [https://servirglobal.net/Privacy-Terms-of-Use](https://servirglobal.net/Privacy-Terms-of-Use).
