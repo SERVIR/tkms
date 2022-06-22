@@ -10,6 +10,10 @@ from django.urls import path
 import pandas as pd
 import numpy as np
 
+from import_export import resources
+from import_export.admin import ImportExportModelAdmin
+from import_export.admin import ImportExportActionModelAdmin
+
 # Register your models here.
 
 # from .models import Organization
@@ -24,26 +28,60 @@ from .models import Service
 from .models import Hub
 from .models import DataSource
 
-admin.site.register(Hub)
-admin.site.register(Keyword)
-admin.site.register(Servicearea)
-
 admin.site.site_header = "SERVIR Training Knowledge Management System - Administration"
 
+class ServiceareaResource(resources.ModelResource):
+    class Meta:
+        model = Servicearea
+
+@admin.register(Servicearea)
+class ServiceareaAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
+    resource_class = ServiceareaResource
+
+class KeywordResource(resources.ModelResource):
+    class Meta:
+        model = Keyword
+
+@admin.register(Keyword)
+class KeywordAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
+    resource_class = KeywordResource
+
+class HubResource(resources.ModelResource):
+    class Meta:
+        model = Hub
+
+@admin.register(Hub)
+class KeywordAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
+    resource_class = HubResource
+
+class DataSourceResource(resources.ModelResource):
+    class Meta:
+        model = DataSource
+
 @admin.register(DataSource)
-class DataSourceAdmin(admin.ModelAdmin):
+class DataSourceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     list_display = ('id', 'name', 'dataType', 'accessType')
     list_filter = ('accessType','dataType',)
     search_fields = ('name', 'id')
+    resource_class = DataSourceResource
+
+class ServiceResource(resources.ModelResource):
+    class Meta:
+        model = Service
 
 @admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
+class ServiceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     list_display = ('id', 'name', 'serviceCatalogID', 'servicearea')
     list_filter = ('servicearea',)
     search_fields = ('name', 'id')
+    resource_class = ServiceResource
+
+class ParticipantorganizationResource(resources.ModelResource):
+    class Meta:
+        model = Participantorganization
 
 @admin.register(Participantorganization)
-class ParticipantorganizationAdmin(admin.ModelAdmin):
+class ParticipantorganizationAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     """Administration object for Participantorganization models.
     Defines:
     - fields to be displayed in list view (list_display)
@@ -54,9 +92,14 @@ class ParticipantorganizationAdmin(admin.ModelAdmin):
     #filter_horizontal = ("trainings",)
     search_fields = ('name', 'acronym', 'country', 'id')
     ordering = ['country','acronym','name']
+    resource_class = ParticipantorganizationResource
+
+class ParticipantResource(resources.ModelResource):
+    class Meta:
+        model = Participant
 
 @admin.register(Participant)
-class ParticipantAdmin(admin.ModelAdmin):
+class ParticipantAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     """Administration object for Participant model
     Defines:
     - fields to be displayed in list view (list_display)
@@ -67,9 +110,14 @@ class ParticipantAdmin(admin.ModelAdmin):
     #filter_horizontal = ("trainings",)
     search_fields = ('role', 'organization__name', 'country', 'id')
     autocomplete_fields = ['organization']
+    resource_class = ParticipantResource
+
+class TrainerResource(resources.ModelResource):
+    class Meta:
+        model = Trainer
 
 @admin.register(Trainer)
-class TrainerAdmin(admin.ModelAdmin):
+class TrainerAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     """Administration object for Trainer model
     Defines:
     - fields to be displayed in list view (list_display)
@@ -78,6 +126,7 @@ class TrainerAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'role', 'gender', 'organization',)
     list_filter = ('gender', 'organization', 'role', )
     search_fields = ('name', 'organization__name', 'role', 'id')
+    resource_class = TrainerResource
 
 # class ResourcesInline(admin.TabularInline):
 #     """Defines format for insertion of resources"""
@@ -86,8 +135,12 @@ class TrainerAdmin(admin.ModelAdmin):
 class CsvImportForm(forms.Form):
     csv_file = forms.FileField()
 
+class TrainingResource(resources.ModelResource):
+    class Meta:
+        model = Training
+
 @admin.register(Training)
-class TrainingAdmin(admin.ModelAdmin):
+class TrainingAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     """Administration object for Training model
     Defines:
     - fields to be displayed in list view (list_display)
@@ -217,9 +270,15 @@ class TrainingAdmin(admin.ModelAdmin):
             self.object_id = obj.id
         return form
 
+    resource_class = TrainingResource
+
+class ResourceResource(resources.ModelResource):
+    class Meta:
+        model = Resource
+
 
 @admin.register(Resource)
-class ResourceAdmin(admin.ModelAdmin):
+class ResourceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     """Administration object for Resource model
     Defines:
     - fields to be displayed in list view (list_display)
@@ -239,3 +298,4 @@ class ResourceAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
             'fields':('trainings',)}),
     )
+    resource_class = ResourceResource

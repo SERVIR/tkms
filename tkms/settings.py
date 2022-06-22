@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 	'training.apps.TrainingConfig',
     # 'crispy_forms',
     'rest_framework',
+    'import_export'
 ]
 
 # CRISPY_TEMPLATE_PACK = "bootstrap4"
