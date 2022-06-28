@@ -112,6 +112,14 @@ class ParticipantAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     autocomplete_fields = ['organization']
     resource_class = ParticipantResource
 
+
+# ------------------------------------------
+# TRAINER Form
+# ------------------------------------------
+
+class TrainingInline (admin.TabularInline):
+    model = Training.trainers.through
+
 class TrainerResource(resources.ModelResource):
     class Meta:
         model = Trainer
@@ -126,6 +134,8 @@ class TrainerAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     list_display = ('id', 'name', 'role', 'gender', 'organization',)
     list_filter = ('gender', 'organization', 'role', )
     search_fields = ('name', 'organization__name', 'role', 'id')
+    exclude = ('trainings',)
+    inlines = [TrainingInline]
     resource_class = TrainerResource
 
 # class ResourcesInline(admin.TabularInline):

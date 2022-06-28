@@ -160,22 +160,7 @@ class Service(models.Model):
 	def __str__(self):
 		return self.name
 
-class Trainer(models.Model):
-	GENDER_CHOICES = (
-		("M", "Male"),
-		("F", "Female"),
-		("X", "Not specified")
-	)
-	name = models.CharField(max_length=300)
-	organization = models.ForeignKey(Participantorganization, on_delete=models.CASCADE)
-	role = models.CharField(max_length=200, help_text="Role within organization")
-	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="X")
-
-	def __str__(self):
-		return self.name
-
-	def gender_verbose(self):
-		return dict(Trainer.GENDER_CHOICES)[self.gender]
+		
 
 class Training(models.Model):
 	FORMAT_CHOICES = (
@@ -242,7 +227,7 @@ class Training(models.Model):
 	participantorganizations = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainees)", blank=True)
 	trainingorganization = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainers)", related_name="training_orgs", blank=True)
 	participants = models.ManyToManyField(Participant, blank=True)
-	trainers = models.ManyToManyField(Trainer, blank=True)
+	trainers = models.ManyToManyField('Trainer', blank=True)
 
 	# Brief statistics of participantorganizations
 	attendanceMales = models.IntegerField(help_text='Number of male participants', blank=True, null=True)
@@ -328,3 +313,26 @@ class Resource(models.Model):
 		return dict(Resource.RESOURCE_TYPE_CHOICES)[self.resourcetype]
 	def license_verboxe(self):
 		return dict(Resource.LICENSE_OPTIONS)[self.license]
+
+# ------------------------------------------
+# Trainers Model
+# ------------------------------------------
+class Trainer(models.Model):
+	GENDER_CHOICES = (
+		("M", "Male"),
+		("F", "Female"),
+		("X", "Not specified")
+	)
+	name = models.CharField(max_length=300)
+	organization = models.ForeignKey(Participantorganization, on_delete=models.CASCADE)
+	role = models.CharField(max_length=200, help_text="Role within organization")
+	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="X")
+	trainings = models.ManyToManyField(Training, through=Training.trainers.through, help_text="Training events", blank=True )
+
+	def __str__(self):
+		return self.name
+
+	def gender_verbose(self):
+		return dict(Trainer.GENDER_CHOICES)[self.gender]
+
+
