@@ -71,6 +71,9 @@ class DataSource(models.Model):
 # 2020-07-17: Hub model will replace Organization model in a second step, after the records
 # 			  from Organization have been copied and references have been updated in related models
 
+# ------------------------------------------
+# Hub Model
+# ------------------------------------------
 class Hub(models.Model):
 
 	hub_short_name = models.CharField(max_length=100, help_text='Hub Short Name')
@@ -96,62 +99,18 @@ class Hub(models.Model):
 	def __str__(self):
 		return self.hub_short_name
 
-class Participantorganization(models.Model):
-	ORGANIZATION_TYPE_CHOICES = (
-		(0, "-- NOT SPECIFIED --"),
-		(1, "Academic Institution"),
-		(2, "Consortium"),
-		(3, "Federal/Central Government"),
-		(4, "Intergovernmental Organization"),
-		(5, "Local Government"),
-		(6, "Private Sector (For-Profit)"),
-		(7, "Private Sector (Non-Profit)/Voluntary/NGO"),
-		(8, "Research Institution"),
-		(9, "State/Provincial Government"),
-		(10, "Indigenous Peoples Organization"),
-		(11, "Miscellaneous/Other")
-	)
-	name = models.CharField(max_length=200)
-	organizationtype = models.IntegerField(choices=ORGANIZATION_TYPE_CHOICES, default=0, help_text="Organization Type")
-	acronym = models.CharField(max_length=50, blank=True, default="-- NOT SPECIFIED --")
-	url = models.URLField(blank=True, help_text="Organization Site")
-	country = models.CharField(max_length=100, help_text="Primary location (HQ)")
-	class Meta:
-		ordering = ('country', 'acronym',)
-		unique_together = ['name', 'country',]
-	def __str__(self):
-		return self.country + ", " + self.acronym + " " + self.name
-
-	def organizationtype_verbose(self):
-		return dict(Participantorganization.ORGANIZATION_TYPE_CHOICES)[self.organizationtype]
-
-class Participant(models.Model):
-	GENDER_CHOICES = (
-		("M", "Male"),
-		("F", "Female"),
-		("X", "Not specified")
-	)
-	organization = models.ForeignKey(Participantorganization, on_delete=models.CASCADE)
-	role = models.CharField(max_length=200, help_text="Role within organization", blank=True)
-	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="X")
-	country = models.CharField(max_length=100, help_text="Country of residence")
-	presurveycompleted = models.BooleanField()
-	postsurveycompleted = models.BooleanField()
-	usparticipantstate = models.CharField(max_length=3, help_text="State (for US participants only)", blank=True)
-	class Meta:
-		ordering = ('country', 'organization', 'role')
-	def __str__(self):
-		return self.country + ", " + self.role
-
-	def gender_verbose(self):
-		return dict(Participant.GENDER_CHOICES)[self.gender]
-
+# ------------------------------------------
+# Service Area Model
+# ------------------------------------------
 class Servicearea(models.Model):
 	name = models.CharField(max_length=300, help_text="Service Area Name")
 
 	def __str__(self):
 		return self.name
 
+# ------------------------------------------
+# Service Model 
+# ------------------------------------------
 class Service(models.Model):
 	name = models.CharField(max_length=300, help_text="Service Name (According to the Service Catalog)")
 	serviceCatalogID = models.CharField(max_length=40, blank=True, help_text="Service Catalog ID")
@@ -159,9 +118,10 @@ class Service(models.Model):
 
 	def __str__(self):
 		return self.name
-
 		
-
+# ------------------------------------------
+# Training Model (Training Events)
+# ------------------------------------------
 class Training(models.Model):
 	FORMAT_CHOICES = (
 		(1, "In-person training"),
@@ -224,9 +184,9 @@ class Training(models.Model):
 	postsurveylink = models.URLField(help_text="Location of post-survey link", blank=True)
 	keywords = models.ManyToManyField(Keyword, blank=True)
 	resources = models.ManyToManyField('Resource', blank=True)
-	participantorganizations = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainees)", blank=True)
-	trainingorganization = models.ManyToManyField(Participantorganization, help_text="Participating Organizations (Trainers)", related_name="training_orgs", blank=True)
-	participants = models.ManyToManyField(Participant, blank=True)
+	participantorganizations = models.ManyToManyField('Participantorganization', help_text="Participating Organizations (Trainees)", blank=True)
+	trainingorganization = models.ManyToManyField('Participantorganization', help_text="Participating Organizations (Trainers)", related_name="training_orgs", blank=True)
+	participants = models.ManyToManyField('Participant', blank=True)
 	trainers = models.ManyToManyField('Trainer', blank=True)
 
 	# Brief statistics of participantorganizations
@@ -261,7 +221,9 @@ class Training(models.Model):
 		permissions = [
 			("can_upload_csv", "Can upload CSV")
 		]
-
+# ------------------------------------------
+# Resource Model
+# ------------------------------------------
 class Resource(models.Model):
 	RESOURCE_TYPE_CHOICES = (
 		(1, "Training Agenda"),
@@ -315,7 +277,7 @@ class Resource(models.Model):
 		return dict(Resource.LICENSE_OPTIONS)[self.license]
 
 # ------------------------------------------
-# Trainers Model
+# Trainer Model
 # ------------------------------------------
 class Trainer(models.Model):
 	GENDER_CHOICES = (
@@ -324,7 +286,7 @@ class Trainer(models.Model):
 		("X", "Not specified")
 	)
 	name = models.CharField(max_length=300)
-	organization = models.ForeignKey(Participantorganization, on_delete=models.CASCADE)
+	organization = models.ForeignKey('Participantorganization', on_delete=models.CASCADE)
 	role = models.CharField(max_length=200, help_text="Role within organization")
 	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="X")
 	trainings = models.ManyToManyField(Training, through=Training.trainers.through, help_text="Training events", blank=True )
@@ -334,5 +296,63 @@ class Trainer(models.Model):
 
 	def gender_verbose(self):
 		return dict(Trainer.GENDER_CHOICES)[self.gender]
+
+# ------------------------------------------
+# Participant Organization Model
+# ------------------------------------------
+class Participantorganization(models.Model):
+	ORGANIZATION_TYPE_CHOICES = (
+		(0, "-- NOT SPECIFIED --"),
+		(1, "Academic Institution"),
+		(2, "Consortium"),
+		(3, "Federal/Central Government"),
+		(4, "Intergovernmental Organization"),
+		(5, "Local Government"),
+		(6, "Private Sector (For-Profit)"),
+		(7, "Private Sector (Non-Profit)/Voluntary/NGO"),
+		(8, "Research Institution"),
+		(9, "State/Provincial Government"),
+		(10, "Indigenous Peoples Organization"),
+		(11, "Miscellaneous/Other")
+	)
+	name = models.CharField(max_length=200)
+	organizationtype = models.IntegerField(choices=ORGANIZATION_TYPE_CHOICES, default=0, help_text="Organization Type")
+	acronym = models.CharField(max_length=50, blank=True, default="-- NOT SPECIFIED --")
+	url = models.URLField(blank=True, help_text="Organization Site")
+	country = models.CharField(max_length=100, help_text="Primary location (HQ)")
+	trainee_participation = models.ManyToManyField(Training, through=Training.participantorganizations.through, blank=True, help_text='Participated as Trainees')
+	trainer_participation = models.ManyToManyField(Training, through=Training.trainingorganization.through, blank=True, help_text='Participated as Trainer', related_name='trainer_participation')
+	class Meta:
+		ordering = ('country', 'acronym',)
+		unique_together = ['name', 'country',]
+	def __str__(self):
+		return self.country + ", " + self.acronym + " " + self.name
+
+	def organizationtype_verbose(self):
+		return dict(Participantorganization.ORGANIZATION_TYPE_CHOICES)[self.organizationtype]
+
+# ------------------------------------------
+# Participant Model
+# ------------------------------------------
+class Participant(models.Model):
+	GENDER_CHOICES = (
+		("M", "Male"),
+		("F", "Female"),
+		("X", "Not specified")
+	)
+	organization = models.ForeignKey(Participantorganization, on_delete=models.CASCADE)
+	role = models.CharField(max_length=200, help_text="Role within organization", blank=True)
+	gender = models.CharField(max_length=1, choices=GENDER_CHOICES, default="X")
+	country = models.CharField(max_length=100, help_text="Country of residence")
+	presurveycompleted = models.BooleanField()
+	postsurveycompleted = models.BooleanField()
+	usparticipantstate = models.CharField(max_length=3, help_text="State (for US participants only)", blank=True)
+	class Meta:
+		ordering = ('country', 'organization', 'role')
+	def __str__(self):
+		return self.country + ", " + self.role
+
+	def gender_verbose(self):
+		return dict(Participant.GENDER_CHOICES)[self.gender]
 
 

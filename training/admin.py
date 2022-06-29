@@ -80,6 +80,9 @@ class ParticipantorganizationResource(resources.ModelResource):
     class Meta:
         model = Participantorganization
 
+# ------------------------------------------
+# Participant Organization Form
+# ------------------------------------------
 @admin.register(Participantorganization)
 class ParticipantorganizationAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     """Administration object for Participantorganization models.
@@ -89,7 +92,7 @@ class ParticipantorganizationAdmin(ImportExportActionModelAdmin, ImportExportMod
     """
     list_display = ('id', 'name', 'acronym', 'organizationtype', 'country')
     list_filter = ('organizationtype', 'country')
-    #filter_horizontal = ("trainings",)
+    filter_horizontal = ("trainee_participation","trainer_participation",)
     search_fields = ('name', 'acronym', 'country', 'id')
     ordering = ['country','acronym','name']
     resource_class = ParticipantorganizationResource
@@ -132,10 +135,11 @@ class TrainerAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     - filters that will be displayed in sidebar (list_filter)
     """
     list_display = ('id', 'name', 'role', 'gender', 'organization',)
-    list_filter = ('gender', 'organization', 'role', )
-    search_fields = ('name', 'organization__name', 'role', 'id')
-    exclude = ('trainings',)
-    inlines = [TrainingInline]
+    list_filter = ('gender', 'organization__country')
+    search_fields = ('name', 'organization__name', 'organization__country', 'role', 'id')
+    filter_horizontal = ('trainings',)
+    # exclude = ('trainings',)
+    # inlines = [TrainingInline]
     resource_class = TrainerResource
 
 # class ResourcesInline(admin.TabularInline):
@@ -178,22 +182,22 @@ class TrainingAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     fieldsets = (
         (None, {'fields':('name', 'starts', 'ends', 'format', 'country', 'city', 'language', 'hub', 'contact', 'recordstatus')}),
         ("Related Services", {
-            'classes': ('collapse',),
+            'classes': ('collapse-open',),
             'fields':('serviceareas', 'otherservicearea', 'services', 'otherservice')}),
         ("Content", {
-            'classes': ('collapse',),
+            'classes': ('collapse-open',),
             'fields':('description','expectedoutcome','attendance','level','keywords','resources', 'dataSource')}),
         ("Evaluation", {
-            'classes': ('collapse',),
+            'classes': ('collapse-open',),
             'fields':('presurveylink','postsurveylink')}),
         ("Attendance", {
-            'classes': ('collapse',),
+            'classes': ('collapse-open',),
             'fields':('participantorganizations','participants','trainingorganization', 'trainers')}),
         ("Attendance count (Fill in if attendance sheet is not available)", {
-            'classes': ('collapse',),
+            'classes': ('collapse-open',),
             'fields':('attendanceFemales', 'attendanceMales', 'attendanceNotSpecified')}),
         ("Administration", {
-            'classes': ('collapse',),
+            'classes': ('collapse-open',),
             'fields':('internalnotes','sharedorgnotes')}),
     )
     # inlines = [ResourcesInline]
@@ -300,12 +304,9 @@ class ResourceAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     search_fields = ("name", "author",)
     date_hierarchy = "added"
     fieldsets = (
-        (None, {'fields':('name', 'resourcetype', 'location', 'added', 'hub', 'internaluse', 'author', 'abstract', 'keywords', 'license')}),
+        (None, {'fields':('name', 'resourcetype', 'location', 'added', 'hub', 'internaluse', 'author', 'abstract', 'keywords', 'license', 'trainings')}),
         ("Backup Status", {
-            'classes': ('collapse',),
-            'fields':('backedup', 'backuplocation', )}),
-        ("List of Trainings Using the Resource", {
-            'classes': ('collapse',),
-            'fields':('trainings',)}),
+            'classes': ('collapse-open'),
+            'fields':('backedup', 'backuplocation', )})
     )
     resource_class = ResourceResource
