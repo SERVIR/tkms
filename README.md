@@ -39,6 +39,11 @@ the siteID for your application, ALLOWED_HOSTS, and CSRF_TRUSTED_ORIGINS.  The f
 conda activate tkms
 ```
 
+- Install npm packages
+```
+npm install --prefix "/servir_apps/tkms/training/static/"
+```
+
 - Create database tables and superuser
 ###### follow prompts to create super user
 ```commandline
