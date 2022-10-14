@@ -147,6 +147,8 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
+
 LOGIN_URL = '/accounts/login/'
 
 LOGIN_REDIRECT_URL = '/'
@@ -155,8 +157,8 @@ LOGOUT_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-SITE_ID = 2
-LOGIN_REDIRECT_URL = '/'
+SITE_ID = 3
+
 
 # Additional configuration settings
 SOCIALACCOUNT_QUERY_EMAIL = True
