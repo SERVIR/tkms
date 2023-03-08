@@ -1,6 +1,6 @@
 asgiref==3.3.4
 beautifulsoup4==4.9.1
-certifi==2020.6.20
+certifi==2022.12.7
 Django>=3.2.4
 django-bootstrap4==2.2.0
 djangorestframework>=3.11.2
