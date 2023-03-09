@@ -131,11 +131,12 @@
     <div class="flex-wrapper">
 
         <div class="myForm">
-            <hr/>
+
             <div>
-                <h1 style="text-align: center">TKMS Authentication</h1>
+
                 <ul>
                     {% if user.is_authenticated %}
+                        <h1 style="text-align: center">TKMS Authentication</h1>
                         <li><a href="{% url 'account_logout' %}">Sign Out</a></li>
                     {% else %}
                         {% block content %}
