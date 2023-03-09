@@ -64,10 +64,7 @@
             crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'node_modules/bootstrap-icons/font/bootstrap-icons.css' %}">
     </script>
-    <!--
-    <script src="{% static 'js/watable/jquery.watable.js' %}"></script>
-    <link rel="{% static 'js/watable/watable.css' %}">
-    -->
+    <link rel="icon" href="{% static 'training/favicon/logo.png' %}" type="image/png">
     <title>..: SERVIR Training Application :..</title>
 </head>
 <body>
@@ -133,13 +130,34 @@
     <div class="container">
         <div class="row">&nbsp;</div>
         <div class="row">
+            <div class="col-md-3  text-center d-flex"></div>
+            <div class="col-md-3  text-center d-flex">
+                <img class="mx-auto my-auto img-fluid"
+                     src="{% static 'training/logos/usaid.png' %}"
+                     onclick="open_site('//usaid.gov');"
+                /></div>
+            <div class="col-md-3  text-center d-flex">
+                <img class="mx-auto my-auto img-fluid"
+                     src="{% static 'training/logos/nasa.png' %}"
+                     onclick="open_site('//nasa.gov');"
+                /></div>
+            <div class="col-md-3 text-center d-flex"></div>
+        </div>
+        <div class="row">&nbsp;</div>
+        <div class="row">
             <div class="col-md-1 text-center d-flex">
+            </div>
+            <div class="col-md-2 text-center d-flex">
+                <img class="mx-auto my-auto img-fluid"
+                     src="{% static 'training/logos/AMZ_Alliance.jpg' %}"
+                     onclick="open_site('//servir.ciat.cgiar.org/');"
+                />
             </div>
             <div class="col-md-2 text-center d-flex">
                 <img
                         class="mx-auto my-auto img-fluid"
-                        src="{% static 'training/logos/cilss.png' %}"
-                        onclick="open_site('https://servir.cilss.int/en/');"
+                        src="{% static 'training/logos/ICRISAT.jpg' %}"
+                        onclick="open_site('https://www.icrisat.org/');"
                 />
             </div>
             <div class="col-md-2 text-center d-flex">
@@ -158,31 +176,12 @@
                      src="{% static 'training/logos/adpc.png' %}"
                      onclick="open_site('//servir.adpc.net/');"
                 /></div>
-            <div class="col-md-2 text-center d-flex">
-                <img class="mx-auto my-auto img-fluid"
-                     src="{% static 'training/logos/CIAT-logo.png' %}"
-                     onclick="open_site('//servir.ciat.cgiar.org/');"
-                />
-            </div>
+
             <div class="col-md-1 text-center d-flex">
             </div>
         </div>
         <div class="row">&nbsp;</div>
-        <div class="row">
-            <div class="col-md-3  text-center d-flex"></div>
-            <div class="col-md-3  text-center d-flex">
-                <img class="mx-auto my-auto img-fluid"
-                     src="{% static 'training/logos/usaid.png' %}"
-                     onclick="open_site('//usaid.gov');"
-                /></div>
-            <div class="col-md-3  text-center d-flex">
-                <img class="mx-auto my-auto img-fluid"
-                     src="{% static 'training/logos/nasa.png' %}"
-                     onclick="open_site('//nasa.gov');"
-                /></div>
-            <div class="col-md-3 text-center d-flex"></div>
-        </div>
-        <div class="row">&nbsp;</div>
+
     </div>
 </div>
 
