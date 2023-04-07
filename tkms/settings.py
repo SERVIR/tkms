@@ -29,7 +29,7 @@ data = json.load(f)
 SECRET_KEY = data["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = data["DEBUG"]
 
 ALLOWED_HOSTS = data["ALLOWED_HOSTS"]
 
