@@ -15,6 +15,8 @@ from pathlib import Path
 import json
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.conf.global_settings import EMAIL_BACKEND
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 f = open(str(BASE_DIR) + '/data.json', )
@@ -178,6 +180,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+EMAIL_BACKEND - 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = data["EMAIL_HOST"]
 EMAIL_HOST_USER  = data["EMAIL_HOST_USER"]
 EMAIL_HOST_PASSWORD = data["EMAIL_HOST_PASSWORD"]
