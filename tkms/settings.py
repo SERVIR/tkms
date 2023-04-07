@@ -180,7 +180,7 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-EMAIL_BACKEND - 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = data["EMAIL_HOST"]
 EMAIL_HOST_USER  = data["EMAIL_HOST_USER"]
 EMAIL_HOST_PASSWORD = data["EMAIL_HOST_PASSWORD"]
