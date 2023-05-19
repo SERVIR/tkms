@@ -6,6 +6,9 @@ from django import forms
 from django import http
 from django import shortcuts
 from django.urls import path
+from django.urls import reverse
+from django.utils.http import urlencode
+from django.utils.html import format_html
 
 import pandas as pd
 import numpy as np
@@ -161,7 +164,7 @@ class TrainingAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     - filters that will be displayed in sidebar (list_filter)
     """
     object_id = None
-    list_display = ('id', 'starts', 'name', 'country', 'hub', 'get_attendanceMale', 'get_attendanceFemale', 'get_attendanceNotSpecified')
+    list_display = ('id', 'starts', 'name', 'country', 'hub', 'get_attendanceMale', 'get_attendanceFemale', 'get_attendanceNotSpecified', 'resources_link')
     list_filter = ('serviceareas', 'hub', 'recordstatus', 'country', 'language')
     filter_horizontal = ('serviceareas', 'services', 'keywords', 'resources', 'dataSource', 'participantorganizations', 'participants', 'trainingorganization', 'trainers')
     date_hierarchy = "starts"
@@ -178,6 +181,14 @@ class TrainingAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     def get_attendanceNotSpecified(self, obj):
         return obj.attendanceNotSpecified
     get_attendanceNotSpecified.short_description = "N/S"
+
+    def resources_link(self, obj):
+        count = obj.resource_set.count()
+        url = (
+            reverse("admin:training_resource_changelist") + '?' + urlencode({"training__id": f"{obj.id}"})
+        )
+        return format_html('<a href="{}">{} items</a>', url, count)
+    resources_link.short_description = "Resources"
 
     fieldsets = (
         (None, {'fields':('name', 'starts', 'ends', 'format', 'country', 'city', 'language', 'hub', 'contact', 'recordstatus')}),
