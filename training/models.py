@@ -190,6 +190,9 @@ class Training(models.Model):
 		permissions = [
 			("can_upload_csv", "Can upload CSV")
 		]
+	def get_absolute_url(self):
+		return f"/trainig/event/"
+		
 # ------------------------------------------
 # Resource Model
 # ------------------------------------------

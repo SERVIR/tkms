@@ -3,62 +3,30 @@
 {% block content %}
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
+
 <h1>Participating Organizations</h1>
 <img class="img-fluid rounded" src="{% static 'training/organizations.jpg' %}">
 
+<script>
+  $(document).ready( function () {
+    $('#OrganizationsTable').DataTable();
+} );
+</script>
+<p>
+</p>
+
 {% if organization_records %}
-<table class="table table-striped table-sm small">
+<table class="table table-striped table-sm small display" id="OrganizationsTable">
   <thead class="thead-dark">
-    <th scope="col"></th>
-    <th scope="col">
-      <a href="?order_by=acronym&asc_des={{ asc_des }}">
-        Acronym
-        {% if order_by == 'acronym' %}
-          {% if asc_des == 'true' %}
-            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
-          {% else %}
-            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
-          {% endif %}
-        {% endif %}
-      </a>
-    </th>
-    <th scope="col">
-      <a href="?order_by=name&asc_des={{ asc_des }}">
-        Name
-        {% if order_by == 'name' %}
-          {% if asc_des == 'true' %}
-            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
-          {% else %}
-            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
-          {% endif %}
-        {% endif %}
-      </a>
-    </th>
-    <th scope="col">
-      <a href="?order_by=country&asc_des={{ asc_des }}">
-        Country
-        {% if order_by == 'country' %}
-          {% if asc_des == 'true' %}
-            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
-          {% else %}
-            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
-          {% endif %}
-        {% endif %}
-      </a>
-    </th>
-    <th scope="col">
-      <a href="?order_by=organizationtype&asc_des={{ asc_des }}">
-        Org Type
-        {% if order_by == 'organizationtype' %}
-          {% if asc_des == 'true' %}
-            &nbsp;<i class="bi bi-sort-alpha-down-alt" style="font-size: 1rem;"></i>
-          {% else %}
-            &nbsp;<i class="bi bi-sort-alpha-down" style="font-size: 1rem;"></i>
-          {% endif %}
-        {% endif %}
-      </a>
-    </th>
+    <tr>
+    <th scope="col">Admin</th>
+    <th scope="col">Acronym</th>
+    <th scope="col">Name</th>
+    <th scope="col">Country</th>
+    <th scope="col">Org Type</th>
+  </tr>
   </thead>
+  <tbody>
   {% for rec in organization_records %}
   <tr>
     <td><a class="badge badge-danger" href="/admin/training/participantorganization/{{ rec.id }}/change/">Edit</a></td>
@@ -68,6 +36,7 @@
     <td>{{ rec.organizationtype_verbose }}</td>
   </tr>
   {% endfor %}
+  </tbody> 
 </table>
 {% else %}
   <p>No Organizations have been registered in the database</p>
