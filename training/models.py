@@ -191,7 +191,8 @@ class Training(models.Model):
 			("can_upload_csv", "Can upload CSV")
 		]
 	def get_absolute_url(self):
-		return f"/trainig/event/"
+		from django.urls import reverse
+		return reverse('training:event_detail', kwargs={'eventid' : self.pk})
 		
 # ------------------------------------------
 # Resource Model
