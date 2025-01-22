@@ -191,7 +191,7 @@ class TrainingAdmin(ImportExportActionModelAdmin, ImportExportModelAdmin):
     resources_link.short_description = "Resources"
 
     fieldsets = (
-        (None, {'fields':('name', 'starts', 'ends', 'format', 'country', 'city', 'language', 'hub', 'contact', 'recordstatus')}),
+        (None, {'fields':('name', 'starts', 'ends', 'format', 'country', 'city', 'language', 'hub', 'contact', 'recordstatus','shown')}),
         ("Related Services", {
             'classes': ('collapse-open',),
             'fields':('serviceareas', 'otherservicearea', 'services', 'otherservice')}),
