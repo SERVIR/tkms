@@ -35,7 +35,7 @@ def events(request):
 	if asc_des == '':
 		asc_des = 'false'
 
-	event_records = Training.objects.order_by(order_by if asc_des == 'true' else "-" + order_by)
+	event_records = Training.objects.filter(shown=True).order_by(order_by if asc_des == 'true' else "-" + order_by)
 	asc_des = 'true' if asc_des == 'false' else 'false'
 
 	content = {

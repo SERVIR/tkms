@@ -146,6 +146,7 @@ class Training(models.Model):
 	# qualifications = models.CharField(max_length=2500, blank=True)
 	level = models.IntegerField(choices=LEVEL_CHOICES, default=1, help_text="Experience Level")
 	contact = models.CharField(max_length=200, blank=True, help_text="Contact email(s)")
+	shown = models.BooleanField(default=True)
 	# fees = models.BooleanField()
 	# promoimage = models.URLField(blank=True, name="Promo Image")
 	# promovideo = models.URLField(blank=True, name= "Promo Video")
@@ -167,6 +168,7 @@ class Training(models.Model):
 	sharedorgnotes = models.URLField(blank=True, help_text="Shared documents (e.g., Google Drive Document/Folder, Sharepoint site, etc.)")
 	recordstatus = models.IntegerField(choices=STATUS_CHOICES, default=0)
 	dataSource = models.ManyToManyField(DataSource, help_text="Data sources used in the training", blank=True)
+
 
 	def __str__(self):
 		return self.name + ", " + self.country
